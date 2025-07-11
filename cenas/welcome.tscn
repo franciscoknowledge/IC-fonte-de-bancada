@@ -5,6 +5,6 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(837, 392)
+position = Vector2(462, 314)
 scale = Vector2(0.438542, 0.460185)
 texture = ExtResource("1_xgifp")
