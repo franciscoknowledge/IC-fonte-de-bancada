@@ -1,10 +1,81 @@
-[gd_scene load_steps=2 format=3 uid="uid://dvr4tqc4b2uay"]
+[gd_scene load_steps=9 format=3 uid="uid://dvr4tqc4b2uay"]
 
-[ext_resource type="Texture2D" uid="uid://7ibb1qimdchs" path="res://imagens/25450786_p0.jpg" id="1_xgifp"]
+[ext_resource type="Texture2D" uid="uid://bc0k781dn8iwk" path="res://imagens/fonte_fundo.png" id="1_5134n"]
+[ext_resource type="Texture2D" uid="uid://ci35p2obmgb4o" path="res://imagens/test.png" id="2_w3u5a"]
+[ext_resource type="Texture2D" uid="uid://cvxrttbwu40gh" path="res://imagens/chave_seletora.png" id="3_o6v8g"]
+[ext_resource type="Texture2D" uid="uid://me17qyb5fxqm" path="res://imagens/potenciometro.png" id="4_cnejx"]
+[ext_resource type="Texture2D" uid="uid://c6etocskeqmkv" path="res://imagens/luz_chave_seletora.png" id="5_tfot6"]
+[ext_resource type="Texture2D" uid="uid://t82dk2hnyuux" path="res://imagens/luz_potenciometro.png" id="6_ucaa7"]
+[ext_resource type="Texture2D" uid="uid://dnxflxatf3an0" path="res://imagens/botao_on_off.png" id="7_u3g5k"]
+[ext_resource type="Texture2D" uid="uid://xsowmes3wkp8" path="res://imagens/fonte.png" id="8_c5f8c"]
 
 [node name="Node2D" type="Node2D"]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(462, 314)
-scale = Vector2(0.438542, 0.460185)
-texture = ExtResource("1_xgifp")
+[node name="FonteFundo" type="Sprite2D" parent="."]
+position = Vector2(770, 360)
+texture = ExtResource("1_5134n")
+
+[node name="ref" type="Sprite2D" parent="."]
+visible = false
+self_modulate = Color(1, 1, 1, 0.619608)
+position = Vector2(770, 360)
+texture = ExtResource("2_w3u5a")
+metadata/_edit_lock_ = true
+
+[node name="ChaveSeletora" type="Sprite2D" parent="."]
+position = Vector2(770, 463)
+texture = ExtResource("3_o6v8g")
+
+[node name="Potenciometro4" type="Sprite2D" parent="."]
+position = Vector2(1202, 437)
+texture = ExtResource("4_cnejx")
+
+[node name="Potenciometro2" type="Sprite2D" parent="."]
+position = Vector2(528, 437)
+texture = ExtResource("4_cnejx")
+
+[node name="Potenciometro3" type="Sprite2D" parent="."]
+position = Vector2(1012, 437)
+texture = ExtResource("4_cnejx")
+
+[node name="Potenciometro" type="Sprite2D" parent="."]
+position = Vector2(338, 437)
+texture = ExtResource("4_cnejx")
+
+[node name="LuzChaveSeletora2" type="Sprite2D" parent="."]
+position = Vector2(770, 339)
+texture = ExtResource("5_tfot6")
+
+[node name="LuzChaveSeletora3" type="Sprite2D" parent="."]
+position = Vector2(828, 368)
+texture = ExtResource("5_tfot6")
+
+[node name="LuzChaveSeletora" type="Sprite2D" parent="."]
+position = Vector2(712, 368)
+texture = ExtResource("5_tfot6")
+
+[node name="LuzPotenciometro" type="Sprite2D" parent="."]
+position = Vector2(444.5, 310)
+texture = ExtResource("6_ucaa7")
+
+[node name="LuzPotenciometro2" type="Sprite2D" parent="."]
+position = Vector2(635, 310)
+texture = ExtResource("6_ucaa7")
+
+[node name="LuzPotenciometro3" type="Sprite2D" parent="."]
+position = Vector2(995, 310)
+texture = ExtResource("6_ucaa7")
+
+[node name="LuzPotenciometro4" type="Sprite2D" parent="."]
+position = Vector2(1185, 310)
+texture = ExtResource("6_ucaa7")
+
+[node name="BotaoOnOff" type="Sprite2D" parent="."]
+position = Vector2(354, 600)
+texture = ExtResource("7_u3g5k")
+
+[node name="ref2" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(770, 360)
+texture = ExtResource("8_c5f8c")
+metadata/_edit_lock_ = true
