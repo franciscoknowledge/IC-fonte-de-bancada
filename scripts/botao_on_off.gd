@@ -29,4 +29,4 @@ func test() -> void:
 		posicao = POS_INICIAL
 		texture_normal = TEXTURA_OFF
 	
-	tween.tween_property(circulo, "position", posicao, 0.3).set_trans(Tween.TRANS_CIRC)
+	tween.tween_property(circulo, "position", posicao, 0.2).set_trans(Tween.TRANS_CIRC)
