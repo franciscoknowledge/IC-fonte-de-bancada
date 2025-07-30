@@ -7,7 +7,8 @@ const TEXTURA_OFF = preload("res://imagens/botao_on_off_fundo.png")
 const TEXTURA_ON = preload("res://imagens/botao_on_off_fundo2.png")
 
 @onready var circulo = $circulo
-var tween
+
+var tween : Tween
 
 func _process(delta: float) -> void:
 	if tween and tween.is_running():
@@ -16,9 +17,9 @@ func _process(delta: float) -> void:
 		disabled = false
 
 func _pressed() -> void:
-	test()
-	
-func test() -> void:
+	liga_desliga()
+
+func liga_desliga() -> void:
 	tween = create_tween()
 	var posicao
 	
