@@ -1,28 +1,33 @@
 extends TextureButton
 
+# constantes:
 const POS_INICIAL = Vector2(46, 37)
 const POS_FINAL = Vector2(136, 37)
 
 const TEXTURA_OFF = preload("res://imagens/botao_on_off_fundo.png")
 const TEXTURA_ON = preload("res://imagens/botao_on_off_fundo2.png")
 
+# variaveis:
 @onready var circulo = $circulo
 
-var tween : Tween
+var tween: Tween
 
-func _process(delta: float) -> void:
-	if tween and tween.is_running():
-		disabled = true
-	else:
-		disabled = false
-
+# funcoes:
 func _pressed() -> void:
+	disabled = true
 	liga_desliga()
 
+func abilitar_botao() -> void:
+	disabled = false
+
+# logica do objeto:
 func liga_desliga() -> void:
-	tween = create_tween()
-	var posicao
+	if tween:
+		tween.kill()
 	
+	tween = create_tween()
+	
+	var posicao
 	if button_pressed:
 		posicao = POS_FINAL
 		texture_normal = TEXTURA_ON
@@ -31,3 +36,4 @@ func liga_desliga() -> void:
 		texture_normal = TEXTURA_OFF
 	
 	tween.tween_property(circulo, "position", posicao, 0.2).set_trans(Tween.TRANS_CIRC)
+	tween.tween_callback(abilitar_botao)
