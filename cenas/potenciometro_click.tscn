@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cjr7rv0vblo0e"]
+
+[ext_resource type="Texture2D" uid="uid://me17qyb5fxqm" path="res://imagens/potenciometro.png" id="1_i2pab"]
+[ext_resource type="Script" uid="uid://dna7mk3qipw0m" path="res://scripts/potenciometro_click.gd" id="2_18axa"]
+
+[node name="potenciometro_click" type="TextureButton"]
+offset_right = 148.0
+offset_bottom = 148.0
+pivot_offset = Vector2(74, 74)
+size_flags_horizontal = 0
+size_flags_vertical = 8
+toggle_mode = true
+texture_normal = ExtResource("1_i2pab")
+script = ExtResource("2_18axa")
