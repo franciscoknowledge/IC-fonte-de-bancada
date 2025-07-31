@@ -1,15 +1,17 @@
 extends Area2D
+class_name potenciometro_rotacao
 
 signal rotacionado(r)
 
 @export var ANGULO_MAX = deg_to_rad(240)
 @export var ANGULO_MIN = deg_to_rad(-60)
+
 var selecionado = false
 
 func _ready() -> void:
 	rotation = ANGULO_MIN
 
-func _process(_delta) -> void:
+func _process(_delta: float) -> void:
 	if selecionado:
 		arrastar()
 

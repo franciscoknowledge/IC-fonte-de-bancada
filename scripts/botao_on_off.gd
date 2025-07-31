@@ -1,4 +1,5 @@
 extends TextureButton
+class_name botao_on_off
 
 # constantes:
 const POS_INICIAL = Vector2(46, 37)

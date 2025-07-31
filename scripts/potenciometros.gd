@@ -6,21 +6,16 @@ extends Node
 @onready var pot_corrente1 = $pot_corrente1
 @onready var pot_corrente2 = $pot_corrente2
 
-var selecionado
+@onready var pots = [pot_voltagem1, pot_voltagem2, pot_corrente1, pot_corrente2]
 
-# Called when the node enters the scene tree for the first time.
+var selecionado: potenciometro_click
+
 func _ready() -> void:
-	var rot_incial = pot_rotacao.ANGULO_MIN
+	var rot_inicial = pot_rotacao.ANGULO_MIN
 	pot_rotacao.visible = false
 	
-	pot_voltagem1.rotation = rot_incial
-	pot_voltagem2.rotation = rot_incial
-	pot_corrente1.rotation = rot_incial
-	pot_corrente2.rotation = rot_incial
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+	for pot in pots:
+		pot.rotation = rot_inicial
 
 func _on_pot_voltagem_1_pressed() -> void:
 	selecionar(pot_voltagem1)
@@ -34,22 +29,23 @@ func _on_pot_corrente_1_pressed() -> void:
 func _on_pot_corrente_2_pressed() -> void:
 	selecionar(pot_corrente2)
 
-func selecionar(pot) -> void:
+func selecionar(pot: potenciometro_click) -> void:
 	if selecionado != pot:
 		selecionado = pot
+		pot_rotacao.rotation = selecionado.rotation
 	else:
 		selecionado = null
 	
 	pot_rotacao.visible = selecionado != null
-	pot_rotacao.rotation = selecionado.rotation
 
-func _on_potenciometro_rotacao_rotacionado(r) -> void:
+func _on_potenciometro_rotacao_rotacionado(rotacao: float) -> void:
 	if !selecionado: return
-	var valor_max_pot = selecionado.VALOR_MAXIMO
+	var valor_saida_max = selecionado.VALOR_MAXIMO
 	var rot_max = pot_rotacao.ANGULO_MAX
 	var rot_min = pot_rotacao.ANGULO_MIN
-	var saida = remap(r, rot_min, rot_max, 0, valor_max_pot)
-	saida = clamp(saida, 0, valor_max_pot)
+	var saida = remap(rotacao, rot_min, rot_max, 0, valor_saida_max)
+	saida = clamp(saida, 0, valor_saida_max)
 	
-	selecionado.rotation = r
+	selecionado.rotation = rotacao
 	selecionado.saida = saida
+	print(floor(saida*100)/100)
