@@ -1,16 +1,18 @@
-[gd_scene load_steps=12 format=3 uid="uid://dvr4tqc4b2uay"]
+[gd_scene load_steps=14 format=3 uid="uid://dvr4tqc4b2uay"]
 
 [ext_resource type="Texture2D" uid="uid://bc0k781dn8iwk" path="res://imagens/fonte_fundo.png" id="1_5134n"]
+[ext_resource type="PackedScene" uid="uid://bo5a58jpjtrf2" path="res://cenas/chave_seletora.tscn" id="2_cnejx"]
 [ext_resource type="Script" uid="uid://d2ekrgo21y6sf" path="res://scripts/potenciometros.gd" id="3_cnejx"]
-[ext_resource type="Texture2D" uid="uid://cvxrttbwu40gh" path="res://imagens/chave_seletora.png" id="3_o6v8g"]
 [ext_resource type="PackedScene" uid="uid://cjr7rv0vblo0e" path="res://cenas/potenciometro_click.tscn" id="4_t7un0"]
 [ext_resource type="Texture2D" uid="uid://c6etocskeqmkv" path="res://imagens/luz_chave_seletora.png" id="5_tfot6"]
 [ext_resource type="Texture2D" uid="uid://t82dk2hnyuux" path="res://imagens/luz_potenciometro.png" id="6_ucaa7"]
 [ext_resource type="Texture2D" uid="uid://q7o53ivwc1g5" path="res://imagens/botao_on_off_fundo.png" id="7_5134n"]
 [ext_resource type="FontFile" uid="uid://ce15oht5x6c1l" path="res://fontes/Seven Segment.ttf" id="7_t7un0"]
+[ext_resource type="Script" uid="uid://bxnfucjnh7esb" path="res://scripts/luzes_chave_seletora.gd" id="7_tfot6"]
 [ext_resource type="Script" uid="uid://lhlx3ohmd1x8" path="res://scripts/botao_on_off.gd" id="8_o6v8g"]
 [ext_resource type="Texture2D" uid="uid://d1xvr7asfehvk" path="res://imagens/botao_on_off_circulo.png" id="8_w3u5a"]
 [ext_resource type="PackedScene" uid="uid://bjuol1tmatima" path="res://cenas/potenciometro_rotacao.tscn" id="10_o6v8g"]
+[ext_resource type="Script" uid="uid://2qjiw0us2r52" path="res://scripts/display.gd" id="12_ucaa7"]
 
 [node name="fonte" type="Node2D"]
 metadata/_edit_lock_ = true
@@ -19,9 +21,27 @@ metadata/_edit_lock_ = true
 position = Vector2(679, 360)
 texture = ExtResource("1_5134n")
 
-[node name="chave_seletora" type="Sprite2D" parent="."]
-position = Vector2(679, 463)
-texture = ExtResource("3_o6v8g")
+[node name="chave_seletora" parent="." instance=ExtResource("2_cnejx")]
+offset_left = 631.0
+offset_top = 415.0
+offset_right = 726.0
+offset_bottom = 510.0
+
+[node name="botao_on_off" type="TextureButton" parent="."]
+offset_left = 173.0
+offset_top = 563.0
+offset_right = 354.0
+offset_bottom = 638.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+toggle_mode = true
+texture_normal = ExtResource("7_5134n")
+script = ExtResource("8_o6v8g")
+metadata/_edit_use_anchors_ = true
+
+[node name="circulo" type="Sprite2D" parent="botao_on_off"]
+position = Vector2(46, 37)
+texture = ExtResource("8_w3u5a")
 
 [node name="potenciometros" type="Node" parent="."]
 script = ExtResource("3_cnejx")
@@ -60,27 +80,29 @@ VALOR_MAXIMO = 3.0
 
 [node name="luzes_potenciometros" type="Node" parent="."]
 
-[node name="voltagem" type="Node" parent="luzes_potenciometros"]
-
-[node name="luz1" type="Sprite2D" parent="luzes_potenciometros/voltagem"]
+[node name="voltagem1" type="Sprite2D" parent="luzes_potenciometros"]
 position = Vector2(544, 310)
 texture = ExtResource("6_ucaa7")
 
-[node name="luz2" type="Sprite2D" parent="luzes_potenciometros/voltagem"]
+[node name="voltagem2" type="Sprite2D" parent="luzes_potenciometros"]
 position = Vector2(1094, 310)
 texture = ExtResource("6_ucaa7")
 
-[node name="corrente" type="Node" parent="luzes_potenciometros"]
-
-[node name="luz1" type="Sprite2D" parent="luzes_potenciometros/corrente"]
+[node name="corrente1" type="Sprite2D" parent="luzes_potenciometros"]
 position = Vector2(353.5, 310)
 texture = ExtResource("6_ucaa7")
 
-[node name="luz2" type="Sprite2D" parent="luzes_potenciometros/corrente"]
+[node name="corrente2" type="Sprite2D" parent="luzes_potenciometros"]
 position = Vector2(904, 310)
 texture = ExtResource("6_ucaa7")
 
 [node name="luzes_chave_seletora" type="Node" parent="."]
+script = ExtResource("7_tfot6")
+
+[node name="linha" type="Line2D" parent="luzes_chave_seletora"]
+visible = false
+width = 3.0
+default_color = Color(1, 0, 0, 1)
 
 [node name="luz_indep" type="Sprite2D" parent="luzes_chave_seletora"]
 position = Vector2(679, 339)
@@ -95,19 +117,9 @@ position = Vector2(737, 368)
 texture = ExtResource("5_tfot6")
 
 [node name="display" type="Node" parent="."]
+script = ExtResource("12_ucaa7")
 
 [node name="voltagem1" type="Label" parent="display"]
-modulate = Color(1, 0, 0, 1)
-offset_left = 208.0
-offset_top = 168.0
-offset_right = 412.0
-offset_bottom = 268.0
-theme_override_fonts/font = ExtResource("7_t7un0")
-theme_override_font_sizes/font_size = 95
-text = "30.00"
-metadata/_edit_use_anchors_ = true
-
-[node name="corrente1" type="Label" parent="display"]
 modulate = Color(1, 0, 0, 1)
 offset_left = 453.0
 offset_top = 168.0
@@ -115,21 +127,10 @@ offset_right = 657.0
 offset_bottom = 268.0
 theme_override_fonts/font = ExtResource("7_t7un0")
 theme_override_font_sizes/font_size = 95
-text = "30.00"
+text = "00.00"
 metadata/_edit_use_anchors_ = true
 
 [node name="voltagem2" type="Label" parent="display"]
-modulate = Color(1, 0, 0, 1)
-offset_left = 701.0
-offset_top = 168.0
-offset_right = 905.0
-offset_bottom = 268.0
-theme_override_fonts/font = ExtResource("7_t7un0")
-theme_override_font_sizes/font_size = 95
-text = "30.00"
-metadata/_edit_use_anchors_ = true
-
-[node name="corrente2" type="Label" parent="display"]
 modulate = Color(1, 0, 0, 1)
 offset_left = 946.0
 offset_top = 168.0
@@ -137,27 +138,38 @@ offset_right = 1150.0
 offset_bottom = 268.0
 theme_override_fonts/font = ExtResource("7_t7un0")
 theme_override_font_sizes/font_size = 95
-text = "30.00"
+text = "00.00"
 metadata/_edit_use_anchors_ = true
 
-[node name="botao_on_off" type="TextureButton" parent="."]
-offset_left = 173.0
-offset_top = 563.0
-offset_right = 354.0
-offset_bottom = 638.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-toggle_mode = true
-texture_normal = ExtResource("7_5134n")
-script = ExtResource("8_o6v8g")
+[node name="corrente1" type="Label" parent="display"]
+modulate = Color(1, 0, 0, 1)
+offset_left = 208.0
+offset_top = 168.0
+offset_right = 412.0
+offset_bottom = 268.0
+theme_override_fonts/font = ExtResource("7_t7un0")
+theme_override_font_sizes/font_size = 95
+text = "00.00"
 metadata/_edit_use_anchors_ = true
 
-[node name="circulo" type="Sprite2D" parent="botao_on_off"]
-position = Vector2(46, 37)
-texture = ExtResource("8_w3u5a")
+[node name="corrente2" type="Label" parent="display"]
+modulate = Color(1, 0, 0, 1)
+offset_left = 701.0
+offset_top = 168.0
+offset_right = 905.0
+offset_bottom = 268.0
+theme_override_fonts/font = ExtResource("7_t7un0")
+theme_override_font_sizes/font_size = 95
+text = "00.00"
+metadata/_edit_use_anchors_ = true
 
+[connection signal="estado_alterado" from="chave_seletora" to="luzes_chave_seletora" method="_on_chave_seletora_estado_alterado"]
 [connection signal="rotacionado" from="potenciometros/potenciometro_rotacao" to="potenciometros" method="_on_potenciometro_rotacao_rotacionado"]
 [connection signal="pressed" from="potenciometros/pot_voltagem1" to="potenciometros" method="_on_pot_voltagem_1_pressed"]
+[connection signal="saida_alterada" from="potenciometros/pot_voltagem1" to="display" method="_on_pot_voltagem_1_saida_alterada"]
 [connection signal="pressed" from="potenciometros/pot_voltagem2" to="potenciometros" method="_on_pot_voltagem_2_pressed"]
+[connection signal="saida_alterada" from="potenciometros/pot_voltagem2" to="display" method="_on_pot_voltagem_2_saida_alterada"]
 [connection signal="pressed" from="potenciometros/pot_corrente1" to="potenciometros" method="_on_pot_corrente_1_pressed"]
+[connection signal="saida_alterada" from="potenciometros/pot_corrente1" to="display" method="_on_pot_corrente_1_saida_alterada"]
 [connection signal="pressed" from="potenciometros/pot_corrente2" to="potenciometros" method="_on_pot_corrente_2_pressed"]
+[connection signal="saida_alterada" from="potenciometros/pot_corrente2" to="display" method="_on_pot_corrente_2_saida_alterada"]

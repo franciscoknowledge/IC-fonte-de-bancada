@@ -45,7 +45,9 @@ func _on_potenciometro_rotacao_rotacionado(rotacao: float) -> void:
 	var rot_min = pot_rotacao.ANGULO_MIN
 	var saida = remap(rotacao, rot_min, rot_max, 0, valor_saida_max)
 	saida = clamp(saida, 0, valor_saida_max)
+	saida = floor(saida*100)/100
 	
 	selecionado.rotation = rotacao
 	selecionado.saida = saida
-	print(floor(saida*100)/100)
+	selecionado.saida_alterada.emit(saida)
+	#print(floor(saida*100)/100)

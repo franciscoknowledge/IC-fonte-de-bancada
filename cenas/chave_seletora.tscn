@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bo5a58jpjtrf2"]
+
+[ext_resource type="Texture2D" uid="uid://cvxrttbwu40gh" path="res://imagens/chave_seletora.png" id="1_xm3h8"]
+[ext_resource type="Script" uid="uid://bwmln5qkgdxgu" path="res://cenas/chave_seletora.gd" id="2_da4is"]
+
+[node name="chave_seletora" type="TextureButton"]
+offset_right = 40.0
+offset_bottom = 40.0
+pivot_offset = Vector2(47.5, 47.5)
+texture_normal = ExtResource("1_xm3h8")
+script = ExtResource("2_da4is")
