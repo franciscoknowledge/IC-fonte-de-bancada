@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dvr4tqc4b2uay"]
+[gd_scene load_steps=15 format=3 uid="uid://dvr4tqc4b2uay"]
 
 [ext_resource type="Texture2D" uid="uid://bc0k781dn8iwk" path="res://imagens/fonte_fundo.png" id="1_5134n"]
 [ext_resource type="PackedScene" uid="uid://bo5a58jpjtrf2" path="res://cenas/chave_seletora.tscn" id="2_cnejx"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://q7o53ivwc1g5" path="res://imagens/botao_on_off_fundo.png" id="7_5134n"]
 [ext_resource type="FontFile" uid="uid://ce15oht5x6c1l" path="res://fontes/Seven Segment.ttf" id="7_t7un0"]
 [ext_resource type="Script" uid="uid://bxnfucjnh7esb" path="res://scripts/luzes_chave_seletora.gd" id="7_tfot6"]
+[ext_resource type="Texture2D" uid="uid://b7de18x1unfcf" path="res://imagens/selecao.png" id="7_u3g5k"]
 [ext_resource type="Script" uid="uid://lhlx3ohmd1x8" path="res://scripts/botao_on_off.gd" id="8_o6v8g"]
 [ext_resource type="Texture2D" uid="uid://d1xvr7asfehvk" path="res://imagens/botao_on_off_circulo.png" id="8_w3u5a"]
 [ext_resource type="PackedScene" uid="uid://bjuol1tmatima" path="res://cenas/potenciometro_rotacao.tscn" id="10_o6v8g"]
@@ -46,21 +47,26 @@ texture = ExtResource("8_w3u5a")
 [node name="potenciometros" type="Node" parent="."]
 script = ExtResource("3_cnejx")
 
+[node name="sprite_selecao" type="Sprite2D" parent="potenciometros"]
+visible = false
+position = Vector2(-115, 104)
+texture = ExtResource("7_u3g5k")
+
 [node name="potenciometro_rotacao" parent="potenciometros" instance=ExtResource("10_o6v8g")]
 position = Vector2(1439, 502)
 
 [node name="pot_voltagem1" parent="potenciometros" instance=ExtResource("4_t7un0")]
 offset_left = 373.0
-offset_top = 371.0
+offset_top = 368.0
 offset_right = 521.0
-offset_bottom = 519.0
+offset_bottom = 516.0
 VALOR_MAXIMO = 30.0
 
 [node name="pot_voltagem2" parent="potenciometros" instance=ExtResource("4_t7un0")]
 offset_left = 1029.0
-offset_top = 376.0
+offset_top = 368.0
 offset_right = 1177.0
-offset_bottom = 524.0
+offset_bottom = 516.0
 VALOR_MAXIMO = 30.0
 
 [node name="pot_corrente1" parent="potenciometros" instance=ExtResource("4_t7un0")]
@@ -164,6 +170,7 @@ text = "00.00"
 metadata/_edit_use_anchors_ = true
 
 [connection signal="estado_alterado" from="chave_seletora" to="luzes_chave_seletora" method="_on_chave_seletora_estado_alterado"]
+[connection signal="toggled" from="botao_on_off" to="display" method="_on_botao_on_off_toggled"]
 [connection signal="rotacionado" from="potenciometros/potenciometro_rotacao" to="potenciometros" method="_on_potenciometro_rotacao_rotacionado"]
 [connection signal="pressed" from="potenciometros/pot_voltagem1" to="potenciometros" method="_on_pot_voltagem_1_pressed"]
 [connection signal="saida_alterada" from="potenciometros/pot_voltagem1" to="display" method="_on_pot_voltagem_1_saida_alterada"]
