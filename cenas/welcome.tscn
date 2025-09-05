@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dvr4tqc4b2uay"]
+[gd_scene load_steps=19 format=3 uid="uid://dvr4tqc4b2uay"]
 
 [ext_resource type="Texture2D" uid="uid://bc0k781dn8iwk" path="res://imagens/fonte_fundo.png" id="1_5134n"]
 [ext_resource type="PackedScene" uid="uid://bo5a58jpjtrf2" path="res://cenas/chave_seletora.tscn" id="2_cnejx"]
@@ -17,6 +17,9 @@
 [ext_resource type="Texture2D" uid="uid://dws64msrlebks" path="res://imagens/comum.png" id="15_c5f8c"]
 [ext_resource type="Script" uid="uid://c2gkk34iwcyq8" path="res://scripts/hitboxes.gd" id="16_6k825"]
 [ext_resource type="PackedScene" uid="uid://bf5tdn7xm5mra" path="res://cenas/hitbox_saida.tscn" id="17_1rfei"]
+
+[sub_resource type="Theme" id="Theme_6k825"]
+default_font_size = 22
 
 [node name="fonte" type="Node2D"]
 metadata/_edit_lock_ = true
@@ -217,69 +220,68 @@ texture = ExtResource("15_c5f8c")
 [node name="hitboxes" type="Node" parent="."]
 script = ExtResource("16_6k825")
 
-[node name="hitboxSaida1" parent="hitboxes" instance=ExtResource("17_1rfei")]
+[node name="hitbox_saida1" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 662.0
 offset_top = 566.0
 offset_right = 715.0
 offset_bottom = 618.0
 saida = 1
 
-[node name="hitboxSaida2" parent="hitboxes" instance=ExtResource("17_1rfei")]
+[node name="hitbox_saida2" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 725.0
 offset_top = 566.0
 offset_right = 778.0
 offset_bottom = 618.0
 saida = 2
 
-[node name="hitboxSaida3" parent="hitboxes" instance=ExtResource("17_1rfei")]
+[node name="hitbox_saida3" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 787.0
 offset_top = 566.0
 offset_right = 840.0
 offset_bottom = 618.0
 saida = 3
 
-[node name="hitboxSaida4" parent="hitboxes" instance=ExtResource("17_1rfei")]
+[node name="hitbox_saida4" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 862.0
 offset_top = 566.0
 offset_right = 915.0
 offset_bottom = 618.0
 saida = 4
 
-[node name="hitboxSaida5" parent="hitboxes" instance=ExtResource("17_1rfei")]
+[node name="hitbox_saida5" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 925.0
 offset_top = 566.0
 offset_right = 978.0
 offset_bottom = 618.0
 saida = 5
 
-[node name="hitboxSaida6" parent="hitboxes" instance=ExtResource("17_1rfei")]
+[node name="hitbox_saida6" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 988.0
 offset_top = 566.0
 offset_right = 1041.0
 offset_bottom = 618.0
 saida = 6
 
-[node name="hitboxSaida7" parent="hitboxes" instance=ExtResource("17_1rfei")]
+[node name="hitbox_saida7" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 1063.0
 offset_top = 565.0
 offset_right = 1116.0
 offset_bottom = 617.0
 saida = 7
 
-[node name="hitboxSaida8" parent="hitboxes" instance=ExtResource("17_1rfei")]
+[node name="hitbox_saida8" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 1125.0
 offset_top = 565.0
 offset_right = 1178.0
 offset_bottom = 617.0
 saida = 8
 
-[node name="popupComum" type="PopupMenu" parent="."]
-size = Vector2i(186, 40)
+[node name="popup_comum" type="PopupMenu" parent="."]
+size = Vector2i(202, 48)
 visible = true
+unfocusable = true
+theme = SubResource("Theme_6k825")
 allow_search = false
-item_count = 1
-item_0/text = "Definir ponto comum"
-item_0/id = 0
 
 [connection signal="estado_alterado" from="chave_seletora" to="luzes_chave_seletora" method="_on_chave_seletora_estado_alterado"]
 [connection signal="toggled" from="botao_on_off" to="display" method="_on_botao_on_off_toggled"]
@@ -292,4 +294,4 @@ item_0/id = 0
 [connection signal="saida_alterada" from="potenciometros/pot_corrente1" to="display" method="_on_pot_corrente_1_saida_alterada"]
 [connection signal="pressed" from="potenciometros/pot_corrente2" to="potenciometros" method="_on_pot_corrente_2_pressed"]
 [connection signal="saida_alterada" from="potenciometros/pot_corrente2" to="display" method="_on_pot_corrente_2_saida_alterada"]
-[connection signal="id_pressed" from="popupComum" to="hitboxes" method="_on_popup_comum_id_pressed"]
+[connection signal="id_pressed" from="popup_comum" to="hitboxes" method="_on_popup_comum_id_pressed"]

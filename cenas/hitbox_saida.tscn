@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bg3g31edv4ug" path="res://scripts/hitbox_saida.gd" id="1_mjnk6"]
 
-[node name="hitboxSaida" type="TextureButton"]
+[node name="hitbox_saida" type="TextureButton"]
 offset_right = 53.0
 offset_bottom = 52.0
 toggle_mode = true

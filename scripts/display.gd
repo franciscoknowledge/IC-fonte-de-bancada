@@ -1,7 +1,7 @@
 extends Node
 
-const COR_ON = Color(1, 0, 0, 1)
-const COR_OFF = Color(0, 0, 0, 0)
+const COR_ON = Color.RED
+const COR_OFF = Color.TRANSPARENT
 
 @onready var pot_voltagem1 = $"../potenciometros/pot_voltagem1"
 @onready var pot_voltagem2 = $"../potenciometros/pot_voltagem2"
