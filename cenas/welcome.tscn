@@ -274,11 +274,12 @@ offset_bottom = 617.0
 saida = 8
 
 [node name="popupComum" type="PopupMenu" parent="."]
-size = Vector2i(186, 50)
+size = Vector2i(186, 40)
+visible = true
+allow_search = false
 item_count = 1
 item_0/text = "Definir ponto comum"
 item_0/id = 0
-item_0/separator = true
 
 [connection signal="estado_alterado" from="chave_seletora" to="luzes_chave_seletora" method="_on_chave_seletora_estado_alterado"]
 [connection signal="toggled" from="botao_on_off" to="display" method="_on_botao_on_off_toggled"]
@@ -291,3 +292,4 @@ item_0/separator = true
 [connection signal="saida_alterada" from="potenciometros/pot_corrente1" to="display" method="_on_pot_corrente_1_saida_alterada"]
 [connection signal="pressed" from="potenciometros/pot_corrente2" to="potenciometros" method="_on_pot_corrente_2_pressed"]
 [connection signal="saida_alterada" from="potenciometros/pot_corrente2" to="display" method="_on_pot_corrente_2_saida_alterada"]
+[connection signal="id_pressed" from="popupComum" to="hitboxes" method="_on_popup_comum_id_pressed"]
