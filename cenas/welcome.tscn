@@ -290,6 +290,7 @@ position = Vector2(950, 631)
 texture = ExtResource("18_1rfei")
 
 [node name="popup_comum" type="PopupMenu" parent="."]
+oversampling_override = 1.0
 size = Vector2i(202, 48)
 visible = true
 unfocusable = true

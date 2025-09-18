@@ -6,6 +6,7 @@ extends Node
 @onready var pot_voltagem2 = $pot_voltagem2
 @onready var pot_corrente1 = $pot_corrente1
 @onready var pot_corrente2 = $pot_corrente2
+@onready var hitboxes = $"../hitboxes"
 
 @onready var pots = [pot_voltagem1, pot_voltagem2, pot_corrente1, pot_corrente2]
 
@@ -45,6 +46,9 @@ func selecionar(pot: potenciometro_click) -> void:
 
 func _on_potenciometro_rotacao_rotacionado(rotacao: float) -> void:
 	if !selecionado: return
+	#if selecionado == pot_corrente1 and not (1 in hitboxes.fontes_em_curto): return
+	#if selecionado == pot_corrente2 and not (2 in hitboxes.fontes_em_curto): return
+	
 	var valor_saida_max = selecionado.VALOR_MAXIMO
 	
 	var rot_max = pot_rotacao.ANGULO_MAX

@@ -27,7 +27,18 @@ const DESLOCAMENTO_Y_TWEEN_SPRITE = 25
 	6: $"../curtos/c2",
 }
 
+@export var curtos_fontes = {
+	1: 1,
+	2: 1,
+	3: 1,
+	
+	4: 2,
+	5: 2,
+	6: 2,
+}
+
 @export var comuns_numeros_ativos = []
+@export var fontes_em_curto = []
 @export var curtos_numeros_ativos = []
 
 var mapa_tweens = {}
@@ -134,6 +145,10 @@ func definir_curto(numero: int) -> void:
 	for id in sprites_curtos.keys():
 		if sprites_curtos[id] == sprite:
 			curtos_numeros_ativos.append(id)
+			
+	var fonte = curtos_fontes[numero]
+	if !(fonte in fontes_em_curto):
+		fontes_em_curto.append(fonte)
 	
 	sprite.visible = true
 	sprites_ativos.append(sprite)
@@ -147,6 +162,10 @@ func remover_curto(numero: int) -> void:
 	for id in sprites_curtos.keys():
 		if sprites_curtos[id] == sprite:
 			curtos_numeros_ativos.erase(id)
+			
+	var fonte = curtos_fontes[numero]
+	if fonte in fontes_em_curto:
+		fontes_em_curto.erase(fonte)
 		
 	sprites_ativos.erase(sprite)
 	#curtos_numeros_ativos.erase(numero)
@@ -178,6 +197,7 @@ func _on_popup_comum_id_pressed(id: int) -> void:
 	limitar_comuns()
 	print(comuns_numeros_ativos)
 	print(sprites_ativos)
+	print(fontes_em_curto)
 
 # funcão antiga que eu tenho medo de remover (ela funcionava, apesar de ser feia)
 #func _on_popup_comum_id_pressed(id: int) -> void:

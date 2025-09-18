@@ -3,6 +3,8 @@ extends Node
 const COR_ON = Color.RED
 const COR_OFF = Color.TRANSPARENT
 
+@onready var hitboxes = $"../hitboxes"
+
 @onready var pot_voltagem1 = $"../potenciometros/pot_voltagem1"
 @onready var pot_voltagem2 = $"../potenciometros/pot_voltagem2"
 @onready var pot_corrente1 = $"../potenciometros/pot_corrente1"
@@ -20,6 +22,17 @@ func _ready() -> void:
 	display_voltagem2.modulate = COR_OFF
 	display_corrente1.modulate = COR_OFF
 	display_corrente2.modulate = COR_OFF
+	
+func _process(delta: float) -> void:
+	if !(1 in hitboxes.fontes_em_curto):
+		display_corrente1.text = "00.00"
+	else:
+		display_corrente1.text = "%05.2f" % pot_corrente1.saida
+	
+	if !(2 in hitboxes.fontes_em_curto):
+		display_corrente2.text = "00.00"
+	else:
+		display_corrente2.text = "%05.2f" % pot_corrente2.saida
 
 func _on_pot_voltagem_1_saida_alterada(saida: Variant) -> void:
 	escrever_display(display_voltagem1, saida)
