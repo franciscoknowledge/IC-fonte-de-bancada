@@ -26,13 +26,17 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if !(1 in hitboxes.fontes_em_curto):
 		display_corrente1.text = "00.00"
+		display_voltagem1.text = "%05.2f" % pot_voltagem1.saida
 	else:
 		display_corrente1.text = "%05.2f" % pot_corrente1.saida
+		display_voltagem1.text = "00.00"
 	
 	if !(2 in hitboxes.fontes_em_curto):
 		display_corrente2.text = "00.00"
+		display_voltagem2.text = "%05.2f" % pot_voltagem2.saida
 	else:
 		display_corrente2.text = "%05.2f" % pot_corrente2.saida
+		display_voltagem2.text = "00.00"
 
 func _on_pot_voltagem_1_saida_alterada(saida: Variant) -> void:
 	escrever_display(display_voltagem1, saida)

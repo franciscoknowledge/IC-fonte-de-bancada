@@ -27,7 +27,7 @@ const DESLOCAMENTO_Y_TWEEN_SPRITE = 25
 	6: $"../curtos/c2",
 }
 
-@export var curtos_fontes = {
+@export var saida_para_fonte = {	
 	1: 1,
 	2: 1,
 	3: 1,
@@ -146,7 +146,7 @@ func definir_curto(numero: int) -> void:
 		if sprites_curtos[id] == sprite:
 			curtos_numeros_ativos.append(id)
 			
-	var fonte = curtos_fontes[numero]
+	var fonte = saida_para_fonte[numero]
 	if !(fonte in fontes_em_curto):
 		fontes_em_curto.append(fonte)
 	
@@ -163,7 +163,7 @@ func remover_curto(numero: int) -> void:
 		if sprites_curtos[id] == sprite:
 			curtos_numeros_ativos.erase(id)
 			
-	var fonte = curtos_fontes[numero]
+	var fonte = saida_para_fonte[numero]
 	if fonte in fontes_em_curto:
 		fontes_em_curto.erase(fonte)
 		
@@ -198,35 +198,25 @@ func _on_popup_comum_id_pressed(id: int) -> void:
 	print(comuns_numeros_ativos)
 	print(sprites_ativos)
 	print(fontes_em_curto)
+	
+func get_fontes_em_comum() -> Array:
+	var fontes_comum = []
+	
+	for saida in comuns_numeros_ativos:
+		var fonte = saida_para_fonte.get(saida, null)
+		
+		if fonte != null and fonte not in fontes_comum:
+			fontes_comum.append(fonte)
+	
+	return fontes_comum
 
-# funcão antiga que eu tenho medo de remover (ela funcionava, apesar de ser feia)
-#func _on_popup_comum_id_pressed(id: int) -> void:
-#	var remover = false
-#	if id == 1:
-#		remover = true
-#
-#	var sprite_selecionado = sprites_comuns[numero_selecionado]
-#	if remover:
-#		sprites_ativos.erase(sprite_selecionado)
-#		comuns_numeros_ativos.erase(numero_selecionado)
-#		fazer_tween_sprite(sprite_selecionado, false)
-#		print(comuns_numeros_ativos)
-#		print(sprites_ativos)
-#		return
-#	
-#	if sprite_selecionado in sprites_ativos:
-#		return
-#
-#	sprite_selecionado.visible = true
-#	sprites_ativos.append(sprite_selecionado)
-#	comuns_numeros_ativos.append(numero_selecionado)
-#	
-#	if sprites_ativos.size() > 2:
-#		var primeiro_comum = sprites_ativos[0]
-#		fazer_tween_sprite(primeiro_comum, false)
-#		sprites_ativos.pop_front()
-#		comuns_numeros_ativos.pop_front()
-#		
-#	fazer_tween_sprite(sprite_selecionado, true)
-#	print(comuns_numeros_ativos)
-#	print(sprites_ativos)
+func get_fontes_em_curto() -> Array:
+	var fontes_curto = []
+	
+	for saida in curtos_numeros_ativos:
+		var fonte = saida_para_fonte.get(saida, null)
+		
+		if fonte != null and fonte not in fontes_curto:
+			fontes_curto.append(fonte)
+		
+	return fontes_curto
