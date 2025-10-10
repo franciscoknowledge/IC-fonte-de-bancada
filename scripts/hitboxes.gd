@@ -35,16 +35,22 @@ const DESLOCAMENTO_Y_TWEEN_SPRITE = 25
 	4: 2,
 	5: 2,
 	6: 2,
+	
+	7: 3,
+	8: 3,
 }
 
 @export var comuns_numeros_ativos = []
 @export var fontes_em_curto = []
+@export var fontes_com_comum = []
 @export var curtos_numeros_ativos = []
+@export var fios_na_fonte = []
 
 var mapa_tweens = {}
 var posicoes_originais_sprites = {}
 var sprites_ativos = []
 var numero_selecionado = 0
+var hitbox_selecionado = null
 
 func _ready() -> void:
 	for hitbox: hitbox_saida in hitboxes:
@@ -62,26 +68,38 @@ func abrir_popup(saida: int, hitbox: hitbox_saida) -> void:
 	
 	var selecao_possui_comum = saida in comuns_numeros_ativos
 	var selecao_possui_curto = saida in curtos_numeros_ativos
+	
+	var fonte = saida_para_fonte[saida]
+	var fonte_possui_comum = fonte in fontes_com_comum
+	var fonte_possui_curto = fonte in fontes_em_curto
+	
 	var habilitar_curto = sprites_curtos.has(saida)
 	
 	popup_comum.position = hitbox.position + vetor_deslocamento
 	popup_comum.visible = true
 	
 	numero_selecionado = saida
+	hitbox_selecionado = hitbox
 	popup_comum.clear()
 	
+	if habilitar_curto:
+		if selecao_possui_curto:
+			popup_comum.add_item("Remover curto", 2)
+		elif (!fonte_possui_comum) and (!fonte_possui_curto):
+			popup_comum.add_item("Definir curto", 3)
+		
 	if selecao_possui_comum:
 		popup_comum.add_item("Remover ponto comum", 1)
-	else:
+	elif (!fonte_possui_comum) and (!fonte_possui_curto):
 		popup_comum.add_item("Definir ponto comum", 0)
-	
-	if !habilitar_curto:
-		return
-	
-	if selecao_possui_curto:
-		popup_comum.add_item("Remover curto", 2)
+		
+	if fios_na_fonte.is_empty():
+		popup_comum.add_item("Fio 1", 4)
 	else:
-		popup_comum.add_item("Definir curto", 3)
+		popup_comum.add_item("Fio 2", 5)
+	
+	if popup_comum.get_item_count() == 0:
+		popup_comum.visible = false
 
 func fazer_tween_sprite(sprite: Sprite2D, ativar: bool) -> void:
 	if mapa_tweens.has(sprite):
@@ -115,6 +133,10 @@ func fazer_tween_sprite(sprite: Sprite2D, ativar: bool) -> void:
 	
 func definir_comum(numero: int) -> void:
 	var sprite = sprites_comuns[numero]
+	var fonte = saida_para_fonte[numero]
+	if !(fonte in fontes_com_comum):
+		fontes_com_comum.append(fonte)
+	
 	if sprite in sprites_ativos:
 		return
 		
@@ -125,8 +147,13 @@ func definir_comum(numero: int) -> void:
 	
 func remover_comum(numero: int) -> void:
 	var sprite = sprites_comuns[numero]
+	var fonte = saida_para_fonte[numero]
+	
 	if !(sprite in sprites_ativos):
 		return
+		
+	if fonte in fontes_com_comum:
+		fontes_com_comum.erase(fonte)
 		
 	sprites_ativos.erase(sprite)
 	comuns_numeros_ativos.erase(numero)
@@ -170,6 +197,19 @@ func remover_curto(numero: int) -> void:
 	sprites_ativos.erase(sprite)
 	#curtos_numeros_ativos.erase(numero)
 	fazer_tween_sprite(sprite, false)
+	
+func get_comuns() -> Array:
+	return comuns_numeros_ativos
+	
+func get_comuns_5v() -> Array:
+	var comuns_5v = []
+	if 7 in comuns_5v:
+		comuns_5v.append(7)
+	
+	if 8 in comuns_5v:
+		comuns_5v.append(8)
+	
+	return comuns_5v
 
 func _on_popup_comum_id_pressed(id: int) -> void:
 	var remover = false
@@ -198,6 +238,26 @@ func _on_popup_comum_id_pressed(id: int) -> void:
 	print(comuns_numeros_ativos)
 	print(sprites_ativos)
 	print(fontes_em_curto)
+	
+	if id == 4:
+		fios_na_fonte.append([numero_selecionado, hitbox_selecionado.position.x])
+	
+	if id == 5:
+		var selecionado1 = fios_na_fonte[0][0]
+		var x1 = fios_na_fonte[0][1]  
+		
+		var selecionado2 = numero_selecionado
+		var x2 = hitbox_selecionado.position.x
+
+		fios_na_fonte.clear()
+		
+		var rect = ColorRect.new()
+		rect.color = Color(1, 0, 0)
+		rect.size = Vector2(x2 - x1, 10)
+		rect.position = Vector2(x1 + 25, 600)
+		
+		add_child(rect)
+		
 	
 func get_fontes_em_comum() -> Array:
 	var fontes_comum = []

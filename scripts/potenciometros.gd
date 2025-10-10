@@ -46,6 +46,12 @@ func selecionar(pot: potenciometro_click) -> void:
 
 func _on_potenciometro_rotacao_rotacionado(rotacao: float) -> void:
 	if !selecionado: return
+	
+	if (selecionado == pot_corrente1) and (pot_voltagem1.saida == 0):
+		return
+		
+	if (selecionado == pot_corrente2) and (pot_voltagem2.saida == 0):
+		return
 	#if selecionado == pot_corrente1 and not (1 in hitboxes.fontes_em_curto): return
 	#if selecionado == pot_corrente2 and not (2 in hitboxes.fontes_em_curto): return
 	
@@ -57,7 +63,7 @@ func _on_potenciometro_rotacao_rotacionado(rotacao: float) -> void:
 	var saida = remap(rotacao, rot_min, rot_max, 0, valor_saida_max)
 	
 	saida = clamp(saida, 0, valor_saida_max)
-	saida = floor(saida*100)/100
+	saida = floor(saida * 100)/100
 	
 	selecionado.rotation = rotacao
 	selecionado.saida = saida

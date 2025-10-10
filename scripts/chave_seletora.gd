@@ -15,7 +15,7 @@ const rotacoes = {
 	ESTADOS.PARALELL : deg_to_rad(120),
 }
 
-@export var estado = ESTADOS.SERIES
+@export var estado = ESTADOS.INDEP
 
 var tween: Tween
 
