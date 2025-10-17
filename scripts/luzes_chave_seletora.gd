@@ -10,21 +10,15 @@ const COR_ON = Color(1, 1, 1, 1)
 @onready var linha: Line2D = $linha
 
 @onready var luzes = {
-	ESTADOS.SERIES : luz_series,
-	ESTADOS.PARALELL : luz_paralell,
-	ESTADOS.INDEP : luz_indep,
-}
-
-enum ESTADOS {
-	SERIES,
-	INDEP,
-	PARALELL,
+	enums.ESTADOS_FONTE.SERIES: luz_series,
+	enums.ESTADOS_FONTE.PARALELL: luz_paralell,
+	enums.ESTADOS_FONTE.INDEP: luz_indep,
 }
 
 var tween: Tween
 
 func _ready() -> void:
-	for luz in [luz_indep, luz_series, luz_paralell]:
+	for luz: Sprite2D in [luz_indep, luz_series, luz_paralell]:
 		luz.modulate = COR_OFF
 	
 	luzes[seletora.estado].modulate = COR_ON
