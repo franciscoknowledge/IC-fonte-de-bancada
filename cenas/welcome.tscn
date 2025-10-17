@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dvr4tqc4b2uay"]
+[gd_scene load_steps=22 format=3 uid="uid://dvr4tqc4b2uay"]
 
 [ext_resource type="Texture2D" uid="uid://bc0k781dn8iwk" path="res://imagens/fonte_fundo.png" id="1_5134n"]
 [ext_resource type="PackedScene" uid="uid://bo5a58jpjtrf2" path="res://cenas/chave_seletora.tscn" id="2_cnejx"]
@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://c2gkk34iwcyq8" path="res://scripts/hitboxes.gd" id="16_6k825"]
 [ext_resource type="PackedScene" uid="uid://bf5tdn7xm5mra" path="res://cenas/hitbox_saida.tscn" id="17_1rfei"]
 [ext_resource type="Texture2D" uid="uid://2onmx60ef424" path="res://imagens/curto.png" id="18_1rfei"]
+[ext_resource type="Texture2D" uid="uid://c5lyhyrhddvlh" path="res://imagens/fio_teste.png" id="18_bq1rw"]
 [ext_resource type="Script" uid="uid://blepu8owguah4" path="res://scripts/displays_saidas.gd" id="19_43vsb"]
 
 [sub_resource type="Theme" id="Theme_6k825"]
@@ -280,6 +281,16 @@ offset_right = 1178.0
 offset_bottom = 617.0
 saida = 8
 
+[node name="linha_base" type="Line2D" parent="hitboxes"]
+points = PackedVector2Array(100, -400, 100, -800, 400, -800, 400, -400)
+width = 15.0
+texture = ExtResource("18_bq1rw")
+texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+sharp_limit = 5.0
+
 [node name="curtos" type="Node" parent="."]
 
 [node name="c1" type="Sprite2D" parent="curtos"]
@@ -344,6 +355,7 @@ theme = SubResource("Theme_6k825")
 allow_search = false
 
 [connection signal="estado_alterado" from="chave_seletora" to="luzes_chave_seletora" method="_on_chave_seletora_estado_alterado"]
+[connection signal="estado_alterado" from="chave_seletora" to="hitboxes" method="_on_chave_seletora_estado_alterado"]
 [connection signal="toggled" from="botao_on_off" to="display" method="_on_botao_on_off_toggled"]
 [connection signal="rotacionado" from="potenciometros/potenciometro_rotacao" to="potenciometros" method="_on_potenciometro_rotacao_rotacionado"]
 [connection signal="pressed" from="potenciometros/pot_voltagem1" to="potenciometros" method="_on_pot_voltagem_1_pressed"]

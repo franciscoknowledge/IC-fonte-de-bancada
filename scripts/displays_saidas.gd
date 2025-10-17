@@ -106,12 +106,23 @@ func modo_serie_paralelo() -> void:
 	$d4.text = str(va)
 	$d6.text = str(vd)
 
+# melhorar depois pfv
+# usa um match ai pls
 func _process(f) -> void:
+	modo_serie_paralelo()
 	if seletora.estado == enums.ESTADOS_FONTE.INDEP:
 		$d1.text = "?"
 		$d3.text = "?"
 		$d4.text = "?"
 		$d6.text = "?"
-		return
 	
-	modo_serie_paralelo()
+	if $"../botao_on_off".button_pressed:
+		$d1.visible = true
+		$d3.visible = true
+		$d4.visible = true
+		$d6.visible = true
+	else:
+		$d1.visible = false
+		$d3.visible = false
+		$d4.visible = false
+		$d6.visible = false

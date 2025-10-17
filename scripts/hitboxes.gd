@@ -4,6 +4,7 @@ const COR_TRANSPARENTE = Color.TRANSPARENT
 const COR_BRANCO = Color.WHITE
 const DESLOCAMENTO_Y_TWEEN_SPRITE = 25
 const TAMANHO_POPUP = Vector2(202, 48)
+const ALTURA_FIOS = 110
 
 enum IDS_POPUP {
 	DEFINIR_COMUM = 0,
@@ -16,6 +17,7 @@ enum IDS_POPUP {
 	FIO_2 = 5,
 }
 
+@onready var LINHA_BASE = $linha_base
 @onready var hitboxes = get_children()
 @onready var popup_comum = $"../popup_comum"
 @onready var seletora = $"../chave_seletora"
@@ -42,9 +44,23 @@ enum IDS_POPUP {
 	enums.SAIDAS.NEG_2: $"../curtos/c2",
 }
 
+@onready var saida_para_hitbox = {
+	enums.SAIDAS.POS_1: $hitbox_saida1,
+	enums.SAIDAS.GND_1: $hitbox_saida2,
+	enums.SAIDAS.NEG_1: $hitbox_saida3,
+	
+	enums.SAIDAS.POS_2: $hitbox_saida4,
+	enums.SAIDAS.GND_2: $hitbox_saida5,
+	enums.SAIDAS.NEG_2: $hitbox_saida6,
+	
+	enums.SAIDAS.POS_5V: $hitbox_saida7,
+	enums.SAIDAS.NEG_5V: $hitbox_saida8,
+}
+
 @export var comuns_numeros_ativos = []
 @export var fontes_em_curto = []
 @export var fontes_com_comum = []
+@export var linhas = []
 @export var curtos_numeros_ativos = []
 @export var fios_na_fonte = []
 @export var fio_sendo_criado = []
@@ -56,8 +72,8 @@ var saida_selecionada = 0
 var hitbox_selecionada = null
 
 func _ready() -> void:
-	for hitbox: hitbox_saida in hitboxes:
-		if not (hitbox is hitbox_saida): continue
+	for hitbox in hitboxes:
+		if !(hitbox is hitbox_saida): continue
 		hitbox.emitir_saida.connect(abrir_popup)
 
 func abrir_popup(saida: int, hitbox: hitbox_saida) -> void:
@@ -78,7 +94,7 @@ func abrir_popup(saida: int, hitbox: hitbox_saida) -> void:
 	saida_selecionada = saida
 	hitbox_selecionada = hitbox
 	popup_comum.clear()
-		
+	
 	if selecao_possui_comum:
 		popup_comum.add_item("Remover ponto comum", IDS_POPUP.REMOVER_COMUM)
 	elif (!fonte_possui_comum) and (!fonte_possui_curto):
@@ -90,7 +106,7 @@ func abrir_popup(saida: int, hitbox: hitbox_saida) -> void:
 		elif (!fonte_possui_comum) and (!fonte_possui_curto):
 			popup_comum.add_item("Definir curto", IDS_POPUP.DEFINIR_CURTO)
 		
-		if seletora.estado == enums.ESTADOS_FONTE.INDEP:
+		if (seletora.estado == enums.ESTADOS_FONTE.INDEP) and (fios_na_fonte.size() <= 4):
 			if fio_sendo_criado.is_empty():
 				popup_comum.add_item("Fio 1", IDS_POPUP.FIO_1)
 			else:
@@ -216,8 +232,51 @@ func criar_fio() -> void:
 		return
 	
 	var fio = [fio_sendo_criado[0], fio_sendo_criado[1]]
+	fio.sort()
+	
 	fio_sendo_criado.clear()
 	fios_na_fonte.append(fio)
+	
+	var tween = create_tween()
+	var tamanho_desejado = 15
+	
+	var linha = LINHA_BASE.duplicate()
+	var altura = ALTURA_FIOS - (20 * (fios_na_fonte.size() - 1))
+	
+	var hitbox_1 = saida_para_hitbox[fio[0]]
+	var hitbox_2 = saida_para_hitbox[fio[1]]
+	
+	var centro_x_1 = hitbox_1.position.x + hitbox_1.size.x / 2
+	var centro_y_1 = hitbox_1.position.y + hitbox_1.size.y / 2
+	
+	var centro_x_2 = hitbox_2.position.x + hitbox_2.size.x / 2
+	var centro_y_2 = hitbox_2.position.y + hitbox_2.size.y / 2
+	
+	var ponto_1 = Vector2(centro_x_1, centro_y_1)
+	var ponto_2 = Vector2(centro_x_1, centro_y_1 + altura)
+	var ponto_3 = Vector2(centro_x_2, centro_y_1 + altura)
+	var ponto_4 = Vector2(centro_x_2, centro_y_2)
+	
+	linha.width = 0
+	
+	linha.clear_points()
+	linha.add_point(ponto_1)
+	linha.add_point(ponto_2)
+	linha.add_point(ponto_3)
+	linha.add_point(ponto_4)
+	
+	add_child(linha)
+	tween.tween_property(linha, "width", tamanho_desejado, 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	linhas.append(linha)
+
+func destruir_todos_fios() -> void:
+	fios_na_fonte.clear()
+	fio_sendo_criado.clear()
+	
+	for linha in linhas:
+		linha.queue_free()
+	
+	linhas.clear()
 
 # getters
 func get_comuns() -> Array:
@@ -274,48 +333,7 @@ func _on_popup_comum_id_pressed(id: int) -> void:
 			criar_fio()
 		
 	limitar_comuns()
-	#var remover = false
-	#var curto = false
-	#
-	#print(id)
-	#if (id == 1) or (id == 2):
-	#	remover = true
-	#	
-	#if (id == 3) or (id == 2):
-	#	curto = true
-	#
-	#if !curto:
-	#	if remover:
-	#		remover_comum(saida_selecionada)
-	#	else:
-	#		definir_comum(saida_selecionada)
-	#	
-	#if curto:
-	#	if remover:
-	#		remover_curto(saida_selecionada)
-	#	else:
-	#		definir_curto(saida_selecionada)
-	#
-	#limitar_comuns()
-	#print(comuns_numeros_ativos)
-	#print(sprites_ativos)
-	#print(fontes_em_curto)
-	#
-	#if id == 4:
-	#	fios_na_fonte.append([saida_selecionada, hitbox_selecionada.position.x])
-	#
-	#if id == 5:
-	#	var selecionado1 = fios_na_fonte[0][0]
-	#	var x1 = fios_na_fonte[0][1]  
-	#	
-	#	var selecionado2 = saida_selecionada
-	#	var x2 = hitbox_selecionada.position.x
-	#
-	#	fios_na_fonte.clear()
-	#	
-	#	var rect = ColorRect.new()
-	#	rect.color = Color(1, 0, 0)
-	#	rect.size = Vector2(x2 - x1, 10)
-	#	rect.position = Vector2(x1 + 25, 600)
-	#	
-	#	add_child(rect)	
+
+func _on_chave_seletora_estado_alterado(novo_estado: Variant, estado_anterior: Variant) -> void:
+	if (novo_estado != enums.ESTADOS_FONTE.INDEP):
+		destruir_todos_fios()
