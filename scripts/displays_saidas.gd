@@ -32,16 +32,22 @@ func recebe_tensao_origem_destino(origem, destino):
 		if key == [origem, destino]:
 			return grafo[key]
 			
+	print("Não achei a aresta (%s, %s) no grafo." % [origem, destino])
+			
 func recebe_vizinhos(no):
 	var vizinhos = []
 	for key in grafo:
 		if key[0] == no:
 			vizinhos.append(key[1])
+			
+	if vizinhos.is_empty():
+		print("O nó %s não tem vizinhos" % no)
 	return vizinhos
 	
 func percorre(atual, origem):
 	if origem:
 		V_indep[atual] = V_indep[origem] + recebe_tensao_origem_destino(origem, atual)
+		
 	var vizinhos = recebe_vizinhos(atual)
 	if origem in vizinhos:
 		vizinhos.erase(origem)
@@ -109,7 +115,10 @@ func modo_indep() -> void:
 		PONTO_D: 0,
 	}
 	
-	percorre(PONTO_B, null)
+	var comuns = hitboxes.get_comuns()
+	for comum in comuns:
+		percorre(comum, null)
+	
 	$d1.text = str(V_indep[PONTO_B])
 	$d3.text = str(V_indep[PONTO_C])
 	$d4.text = str(V_indep[PONTO_A])
@@ -117,7 +126,7 @@ func modo_indep() -> void:
 
 # melhorar depois pfv
 # usa um match ai pls
-func _process(f) -> void:
+func _process(_delta) -> void:
 	match seletora.estado:
 		enums.ESTADOS_FONTE.INDEP:
 			modo_indep()

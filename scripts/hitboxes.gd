@@ -71,10 +71,17 @@ var sprites_ativos = []
 var saida_selecionada = 0
 var hitbox_selecionada = null
 
+var quantidade_de_comuns = 2
+
 func _ready() -> void:
 	for hitbox in hitboxes:
 		if !(hitbox is hitbox_saida): continue
 		hitbox.emitir_saida.connect(abrir_popup)
+		
+func _process(_delta) -> void:
+	if get_possui_fontes_interconectadas():
+		quantidade_de_comuns = 1
+		limitar_comuns()
 
 func abrir_popup(saida: int, hitbox: hitbox_saida) -> void:
 	var selecao_possui_comum = saida in comuns_numeros_ativos
@@ -97,7 +104,7 @@ func abrir_popup(saida: int, hitbox: hitbox_saida) -> void:
 	
 	if selecao_possui_comum:
 		popup_comum.add_item("Remover ponto comum", IDS_POPUP.REMOVER_COMUM)
-	elif (!fonte_possui_comum) and (!fonte_possui_curto):
+	elif (!fonte_possui_comum) and (!fonte_possui_curto) and (habilitar_curto):
 		popup_comum.add_item("Definir ponto comum", IDS_POPUP.DEFINIR_COMUM)
 		
 	if habilitar_curto:
@@ -183,7 +190,7 @@ func remover_comum(saida: int) -> void:
 	fazer_tween_sprite(sprite, false)
 	
 func limitar_comuns() -> void:
-	if sprites_ativos.size() > 2:
+	if sprites_ativos.size() > quantidade_de_comuns:
 		var primeiro_comum = comuns_numeros_ativos[0]
 		remover_comum(primeiro_comum)
 
@@ -305,6 +312,8 @@ func get_fontes_com_comum() -> Array:
 
 func get_fontes_com_curto() -> Array:
 	var fontes_curto = []
+	if fontes_curto.is_empty():
+		return fontes_curto
 	
 	for saida in curtos_numeros_ativos:
 		var fonte = enums.SAIDA_PARA_FONTE.get(saida, null)
@@ -313,6 +322,18 @@ func get_fontes_com_curto() -> Array:
 			fontes_curto.append(fonte)
 		
 	return fontes_curto
+
+func get_possui_fontes_interconectadas() -> bool:
+	if fios_na_fonte.is_empty():
+		return false
+	
+	for fio in fios_na_fonte:
+		var ponto_1 = fio[0]
+		var ponto_2 = fio[1]
+		if enums.SAIDA_PARA_FONTE[ponto_1] != enums.SAIDA_PARA_FONTE[ponto_2]:
+			return true
+			
+	return false
 
 func _on_popup_comum_id_pressed(id: int) -> void:
 	match id:
@@ -337,3 +358,8 @@ func _on_popup_comum_id_pressed(id: int) -> void:
 func _on_chave_seletora_estado_alterado(novo_estado: Variant, estado_anterior: Variant) -> void:
 	if (novo_estado != enums.ESTADOS_FONTE.INDEP):
 		destruir_todos_fios()
+		quantidade_de_comuns = 1
+	elif (novo_estado == enums.ESTADOS_FONTE.INDEP):
+		quantidade_de_comuns = 2
+	
+	limitar_comuns()
