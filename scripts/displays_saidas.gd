@@ -179,9 +179,16 @@ func calcular_potenciais() -> void:
 		modo_indep()
 	else:
 		modo_serie_paralelo()
-	
-func _process(_delta) -> void:
-	calcular_potenciais()
 
 func _on_botao_on_off_toggled(toggled_on: bool) -> void:
 	toggle_visibilidade_labels(toggled_on)
+	calcular_potenciais()
+
+func _on_pot_voltagem_1_saida_alterada(_saida: Variant) -> void:
+	calcular_potenciais()
+
+func _on_pot_voltagem_2_saida_alterada(_saida: Variant) -> void:
+	calcular_potenciais()
+
+func _on_hitboxes_fonte_modificada() -> void:
+	calcular_potenciais()

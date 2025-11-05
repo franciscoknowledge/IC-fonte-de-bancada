@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://b5u8dlqq42dyy"]
+
+[ext_resource type="Texture2D" uid="uid://c5lyhyrhddvlh" path="res://imagens/fio_teste.png" id="1_cxx3y"]
+[ext_resource type="Script" uid="uid://guuf4evmx0q7" path="res://scripts/fio.gd" id="2_6a0q3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cxx3y"]
+resource_local_to_scene = true
+
+[node name="fio" type="Line2D"]
+width = 15.0
+texture = ExtResource("1_cxx3y")
+texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+sharp_limit = 5.0
+script = ExtResource("2_6a0q3")
+
+[node name="hitbox" type="Area2D" parent="."]
+
+[node name="shape_2d" type="CollisionShape2D" parent="hitbox"]
+shape = SubResource("RectangleShape2D_cxx3y")
+debug_color = Color(0.4509804, 0.4392157, 0.9843137, 0.5686275)
+
+[connection signal="input_event" from="hitbox" to="." method="_on_hitbox_input_event"]

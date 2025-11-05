@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dvr4tqc4b2uay"]
+[gd_scene load_steps=23 format=3 uid="uid://dvr4tqc4b2uay"]
 
 [ext_resource type="Texture2D" uid="uid://bc0k781dn8iwk" path="res://imagens/fonte_fundo.png" id="1_5134n"]
 [ext_resource type="PackedScene" uid="uid://bo5a58jpjtrf2" path="res://cenas/chave_seletora.tscn" id="2_cnejx"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://2onmx60ef424" path="res://imagens/curto.png" id="18_1rfei"]
 [ext_resource type="Texture2D" uid="uid://c5lyhyrhddvlh" path="res://imagens/fio_teste.png" id="18_bq1rw"]
 [ext_resource type="Script" uid="uid://blepu8owguah4" path="res://scripts/displays_saidas.gd" id="19_43vsb"]
+[ext_resource type="Texture2D" uid="uid://dntiw4ua3mbk6" path="res://imagens/setinha_util.png" id="19_sk7bf"]
 
 [sub_resource type="Theme" id="Theme_6k825"]
 default_font_size = 22
@@ -182,41 +183,49 @@ metadata/_edit_use_anchors_ = true
 
 [node name="c1" type="Sprite2D" parent="comuns"]
 visible = false
+z_index = 1
 position = Vector2(689, 653)
 texture = ExtResource("15_c5f8c")
 
 [node name="c2" type="Sprite2D" parent="comuns"]
 visible = false
+z_index = 1
 position = Vector2(751, 653)
 texture = ExtResource("15_c5f8c")
 
 [node name="c3" type="Sprite2D" parent="comuns"]
 visible = false
+z_index = 1
 position = Vector2(813, 653)
 texture = ExtResource("15_c5f8c")
 
 [node name="c4" type="Sprite2D" parent="comuns"]
 visible = false
+z_index = 1
 position = Vector2(889, 653)
 texture = ExtResource("15_c5f8c")
 
 [node name="c5" type="Sprite2D" parent="comuns"]
 visible = false
+z_index = 1
 position = Vector2(951, 653)
 texture = ExtResource("15_c5f8c")
 
 [node name="c6" type="Sprite2D" parent="comuns"]
 visible = false
+z_index = 1
 position = Vector2(1013, 653)
 texture = ExtResource("15_c5f8c")
 
 [node name="c7" type="Sprite2D" parent="comuns"]
 visible = false
+z_index = 1
 position = Vector2(1089, 653)
 texture = ExtResource("15_c5f8c")
 
 [node name="c8" type="Sprite2D" parent="comuns"]
 visible = false
+z_index = 1
 position = Vector2(1152, 653)
 texture = ExtResource("15_c5f8c")
 
@@ -282,6 +291,7 @@ offset_bottom = 617.0
 saida = 8
 
 [node name="linha_base" type="Line2D" parent="hitboxes"]
+visible = false
 points = PackedVector2Array(100, -400, 100, -800, 400, -800, 400, -400)
 width = 15.0
 texture = ExtResource("18_bq1rw")
@@ -290,6 +300,12 @@ joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
 sharp_limit = 5.0
+
+[node name="setinha_util" type="Sprite2D" parent="hitboxes"]
+visible = false
+z_index = 2
+position = Vector2(688, 651)
+texture = ExtResource("19_sk7bf")
 
 [node name="curtos" type="Node" parent="."]
 
@@ -308,6 +324,7 @@ script = ExtResource("19_43vsb")
 
 [node name="d1" type="Label" parent="displays_saidas"]
 visible = false
+z_index = 3
 offset_left = 658.0
 offset_top = 658.0
 offset_right = 728.0
@@ -319,6 +336,7 @@ vertical_alignment = 1
 
 [node name="d3" type="Label" parent="displays_saidas"]
 visible = false
+z_index = 3
 offset_left = 775.0
 offset_top = 658.0
 offset_right = 845.0
@@ -330,6 +348,7 @@ vertical_alignment = 1
 
 [node name="d4" type="Label" parent="displays_saidas"]
 visible = false
+z_index = 3
 offset_left = 857.0
 offset_top = 658.0
 offset_right = 927.0
@@ -341,6 +360,7 @@ vertical_alignment = 1
 
 [node name="d6" type="Label" parent="displays_saidas"]
 visible = false
+z_index = 3
 offset_left = 978.0
 offset_top = 658.0
 offset_right = 1048.0
@@ -365,10 +385,14 @@ allow_search = false
 [connection signal="rotacionado" from="potenciometros/potenciometro_rotacao" to="potenciometros" method="_on_potenciometro_rotacao_rotacionado"]
 [connection signal="pressed" from="potenciometros/pot_voltagem1" to="potenciometros" method="_on_pot_voltagem_1_pressed"]
 [connection signal="saida_alterada" from="potenciometros/pot_voltagem1" to="display" method="_on_pot_voltagem_1_saida_alterada"]
+[connection signal="saida_alterada" from="potenciometros/pot_voltagem1" to="displays_saidas" method="_on_pot_voltagem_1_saida_alterada"]
 [connection signal="pressed" from="potenciometros/pot_voltagem2" to="potenciometros" method="_on_pot_voltagem_2_pressed"]
 [connection signal="saida_alterada" from="potenciometros/pot_voltagem2" to="display" method="_on_pot_voltagem_2_saida_alterada"]
+[connection signal="saida_alterada" from="potenciometros/pot_voltagem2" to="displays_saidas" method="_on_pot_voltagem_2_saida_alterada"]
 [connection signal="pressed" from="potenciometros/pot_corrente1" to="potenciometros" method="_on_pot_corrente_1_pressed"]
 [connection signal="saida_alterada" from="potenciometros/pot_corrente1" to="display" method="_on_pot_corrente_1_saida_alterada"]
 [connection signal="pressed" from="potenciometros/pot_corrente2" to="potenciometros" method="_on_pot_corrente_2_pressed"]
 [connection signal="saida_alterada" from="potenciometros/pot_corrente2" to="display" method="_on_pot_corrente_2_saida_alterada"]
+[connection signal="fonte_modificada" from="hitboxes" to="displays_saidas" method="_on_hitboxes_fonte_modificada"]
 [connection signal="id_pressed" from="popup_comum" to="hitboxes" method="_on_popup_comum_id_pressed"]
+[connection signal="popup_hide" from="popup_comum" to="hitboxes" method="_on_popup_comum_popup_hide"]

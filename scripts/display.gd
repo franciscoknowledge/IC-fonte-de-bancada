@@ -25,7 +25,7 @@ func _ready() -> void:
 	display_corrente1.modulate = COR_OFF
 	display_corrente2.modulate = COR_OFF
 	
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var fontes_com_curto = hitboxes.get_fontes_com_curto()
 	
 	var fonte1_em_curto = (fontes_com_curto.has(enums.FONTES.FONTE_1))
