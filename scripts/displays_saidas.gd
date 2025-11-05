@@ -5,15 +5,39 @@ extends Node
 @onready var pot_voltagem1 = $"../potenciometros/pot_voltagem1"
 @onready var pot_voltagem2 = $"../potenciometros/pot_voltagem2"
 @onready var seletora = $"../chave_seletora"
+@onready var botao = $"../botao_on_off"
 
-const PONTO_A = enums.SAIDAS.POS_2
-const PONTO_B = enums.SAIDAS.POS_1
+#const PONTO_A = enums.SAIDAS.POS_2
+#const PONTO_B = enums.SAIDAS.POS_1
+#const PONTO_C = enums.SAIDAS.NEG_1
+#const PONTO_D = enums.SAIDAS.NEG_2
+
+const PONTO_A = enums.SAIDAS.POS_1
+const PONTO_B = enums.SAIDAS.POS_2
 const PONTO_C = enums.SAIDAS.NEG_1
 const PONTO_D = enums.SAIDAS.NEG_2
 
+@onready var labels = [$d1, $d3, $d4, $d6]
+
 var grafo = {}
 var V_indep = {}
+var visitados = []
+var ciclo_detectado = false
 
+func toggle_visibilidade_labels(visivel) -> void:
+	for label in labels:
+		label.visible = visivel
+
+func escrever_labels(d1, d2, d3, d4) -> void:
+	var valores = [d1, d2, d3, d4]
+	
+	for i in range(labels.size()):
+		var label = labels[i]
+		var valor = valores[i]
+		var str = str(valor)
+		
+		label.text = str
+	
 func get_primeiro_comum() -> int:
 	var comuns = hitboxes.get_comuns()
 	if comuns.size() <= 0:
@@ -21,20 +45,18 @@ func get_primeiro_comum() -> int:
 	
 	return comuns[0]
 
-func criar_permutacao(fio) -> Array:
-	var permutacao = []
-	permutacao.append(fio[1])
-	permutacao.append(fio[0])
-	return permutacao
+func indep_criar_permutacao(fio) -> Array:
+	return [fio[1], fio[0]]
 	
-func recebe_tensao_origem_destino(origem, destino):
+func indep_recebe_tensao_origem_destino(origem, destino) -> Variant:
 	for key in grafo:
 		if key == [origem, destino]:
 			return grafo[key]
 			
 	print("Não achei a aresta (%s, %s) no grafo." % [origem, destino])
+	return null
 			
-func recebe_vizinhos(no):
+func indep_recebe_vizinhos(no) -> Array:
 	var vizinhos = []
 	for key in grafo:
 		if key[0] == no:
@@ -44,16 +66,46 @@ func recebe_vizinhos(no):
 		print("O nó %s não tem vizinhos" % no)
 	return vizinhos
 	
-func percorre(atual, origem):
-	if origem:
-		V_indep[atual] = V_indep[origem] + recebe_tensao_origem_destino(origem, atual)
+func indep_percorre(atual, origem) -> void:
+	if atual in visitados:
+		print("ciclo no nó %s" % atual)
+		ciclo_detectado = true
+		return
 		
-	var vizinhos = recebe_vizinhos(atual)
+	visitados.append(atual)
+	
+	if origem:
+		V_indep[atual] = V_indep[origem] + indep_recebe_tensao_origem_destino(origem, atual)
+		
+	var vizinhos = indep_recebe_vizinhos(atual)
 	if origem in vizinhos:
 		vizinhos.erase(origem)
 		
 	for vizinho in vizinhos:
-		percorre(vizinho, atual)
+		indep_percorre(vizinho, atual)
+
+func indep_construir_grafo_e_tensoes(v1, v2) -> void:
+	grafo = {
+		[PONTO_C, PONTO_A]: v1,
+		[PONTO_D, PONTO_B]: v2,
+		[PONTO_A, PONTO_C]: -v1,
+		[PONTO_B, PONTO_D]: -v2,
+	}
+	
+	for fio in hitboxes.fios_na_fonte:
+		grafo[fio] = 0
+		grafo[indep_criar_permutacao(fio)] = 0
+	
+func indep_limpar_variaveis() -> void:
+	V_indep = {
+		PONTO_A: 0,
+		PONTO_B: 0,
+		PONTO_C: 0,
+		PONTO_D: 0,
+	}
+	
+	visitados.clear()
+	ciclo_detectado = false
 
 func modo_serie_paralelo() -> void:
 	var v1 = pot_voltagem2.saida
@@ -88,60 +140,48 @@ func modo_serie_paralelo() -> void:
 	var vc = potenciais[PONTO_C] - tensao_comum
 	var vd = potenciais[PONTO_D] - tensao_comum
 	
-	$d1.text = str(vb)
-	$d3.text = str(vc)
-	$d4.text = str(va)
-	$d6.text = str(vd)
+	escrever_labels(vb, vc, va, vd)
+	
+	#$d1.text = str(vb)
+	#$d3.text = str(vc)
+	#$d4.text = str(va)
+	#$d6.text = str(vd)
 
 func modo_indep() -> void:
 	var v1 = pot_voltagem1.saida
 	var v2 = pot_voltagem2.saida
 	
-	grafo = {
-		[PONTO_C, PONTO_A]: v1,
-		[PONTO_D, PONTO_B]: v2,
-		[PONTO_A, PONTO_C]: -v1,
-		[PONTO_B, PONTO_D]: -v2,
-	}
-	
-	for fio in hitboxes.fios_na_fonte:
-		grafo[fio] = 0
-		grafo[criar_permutacao(fio)] = 0
-	
-	V_indep = {
-		PONTO_A: 0,
-		PONTO_B: 0,
-		PONTO_C: 0,
-		PONTO_D: 0,
-	}
+	indep_construir_grafo_e_tensoes(v1, v2)
+	indep_limpar_variaveis()
 	
 	var comuns = hitboxes.get_comuns()
+	
 	for comum in comuns:
-		percorre(comum, null)
+		indep_percorre(comum, null)
+		
+	if ciclo_detectado:
+		for label in labels:
+			label.text = "!"
+		return
 	
-	$d1.text = str(V_indep[PONTO_B])
-	$d3.text = str(V_indep[PONTO_C])
-	$d4.text = str(V_indep[PONTO_A])
-	$d6.text = str(V_indep[PONTO_D])
-
-# melhorar depois pfv
-# usa um match ai pls
-func _process(_delta) -> void:
-	match seletora.estado:
-		enums.ESTADOS_FONTE.INDEP:
-			modo_indep()
-		enums.ESTADOS_FONTE.SERIES:
-			modo_serie_paralelo()
-		enums.ESTADOS_FONTE.PARALELL:
-			modo_serie_paralelo()
+	#$d1.text = str(V_indep[PONTO_A])
+	#$d3.text = str(V_indep[PONTO_C])
+	#$d4.text = str(V_indep[PONTO_B])
+	#$d6.text = str(V_indep[PONTO_D])
 	
-	if $"../botao_on_off".button_pressed:
-		$d1.visible = true
-		$d3.visible = true
-		$d4.visible = true
-		$d6.visible = true
+	escrever_labels(V_indep[PONTO_A], V_indep[PONTO_C], V_indep[PONTO_B], V_indep[PONTO_D])
+	
+func calcular_potenciais() -> void:
+	if !(botao.button_pressed):
+		return
+	
+	if (seletora.estado == enums.ESTADOS_FONTE.INDEP):
+		modo_indep()
 	else:
-		$d1.visible = false
-		$d3.visible = false
-		$d4.visible = false
-		$d6.visible = false
+		modo_serie_paralelo()
+	
+func _process(_delta) -> void:
+	calcular_potenciais()
+
+func _on_botao_on_off_toggled(toggled_on: bool) -> void:
+	toggle_visibilidade_labels(toggled_on)

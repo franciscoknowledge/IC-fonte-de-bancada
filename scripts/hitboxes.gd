@@ -5,6 +5,7 @@ const COR_BRANCO = Color.WHITE
 const DESLOCAMENTO_Y_TWEEN_SPRITE = 25
 const TAMANHO_POPUP = Vector2(202, 48)
 const ALTURA_FIOS = 110
+const LIMITE_FIOS = 4
 
 enum IDS_POPUP {
 	DEFINIR_COMUM = 0,
@@ -113,7 +114,7 @@ func abrir_popup(saida: int, hitbox: hitbox_saida) -> void:
 		elif (!fonte_possui_comum) and (!fonte_possui_curto):
 			popup_comum.add_item("Definir curto", IDS_POPUP.DEFINIR_CURTO)
 		
-		if (seletora.estado == enums.ESTADOS_FONTE.INDEP) and (fios_na_fonte.size() <= 4):
+		if (seletora.estado == enums.ESTADOS_FONTE.INDEP) and (fios_na_fonte.size() <= LIMITE_FIOS):
 			if fio_sendo_criado.is_empty():
 				popup_comum.add_item("Fio 1", IDS_POPUP.FIO_1)
 			else:

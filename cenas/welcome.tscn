@@ -307,6 +307,7 @@ texture = ExtResource("18_1rfei")
 script = ExtResource("19_43vsb")
 
 [node name="d1" type="Label" parent="displays_saidas"]
+visible = false
 offset_left = 658.0
 offset_top = 658.0
 offset_right = 728.0
@@ -317,6 +318,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="d3" type="Label" parent="displays_saidas"]
+visible = false
 offset_left = 775.0
 offset_top = 658.0
 offset_right = 845.0
@@ -327,6 +329,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="d4" type="Label" parent="displays_saidas"]
+visible = false
 offset_left = 857.0
 offset_top = 658.0
 offset_right = 927.0
@@ -337,6 +340,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="d6" type="Label" parent="displays_saidas"]
+visible = false
 offset_left = 978.0
 offset_top = 658.0
 offset_right = 1048.0
@@ -357,6 +361,7 @@ allow_search = false
 [connection signal="estado_alterado" from="chave_seletora" to="luzes_chave_seletora" method="_on_chave_seletora_estado_alterado"]
 [connection signal="estado_alterado" from="chave_seletora" to="hitboxes" method="_on_chave_seletora_estado_alterado"]
 [connection signal="toggled" from="botao_on_off" to="display" method="_on_botao_on_off_toggled"]
+[connection signal="toggled" from="botao_on_off" to="displays_saidas" method="_on_botao_on_off_toggled"]
 [connection signal="rotacionado" from="potenciometros/potenciometro_rotacao" to="potenciometros" method="_on_potenciometro_rotacao_rotacionado"]
 [connection signal="pressed" from="potenciometros/pot_voltagem1" to="potenciometros" method="_on_pot_voltagem_1_pressed"]
 [connection signal="saida_alterada" from="potenciometros/pot_voltagem1" to="display" method="_on_pot_voltagem_1_saida_alterada"]
