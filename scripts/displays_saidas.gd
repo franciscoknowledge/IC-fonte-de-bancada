@@ -7,15 +7,15 @@ extends Node
 @onready var seletora = $"../chave_seletora"
 @onready var botao = $"../botao_on_off"
 
-#const PONTO_A = enums.SAIDAS.POS_2
-#const PONTO_B = enums.SAIDAS.POS_1
-#const PONTO_C = enums.SAIDAS.NEG_1
-#const PONTO_D = enums.SAIDAS.NEG_2
+const SP_PONTO_A = enums.SAIDAS.POS_2
+const SP_PONTO_B = enums.SAIDAS.POS_1
+const SP_PONTO_C = enums.SAIDAS.NEG_1
+const SP_PONTO_D = enums.SAIDAS.NEG_2
 
-const PONTO_A = enums.SAIDAS.POS_1
-const PONTO_B = enums.SAIDAS.POS_2
-const PONTO_C = enums.SAIDAS.NEG_1
-const PONTO_D = enums.SAIDAS.NEG_2
+const INDEP_PONTO_A = enums.SAIDAS.POS_1
+const INDEP_PONTO_B = enums.SAIDAS.POS_2
+const INDEP_PONTO_C = enums.SAIDAS.NEG_1
+const INDEP_PONTO_D = enums.SAIDAS.NEG_2
 
 @onready var labels = [$d1, $d3, $d4, $d6]
 
@@ -86,10 +86,10 @@ func indep_percorre(atual, origem) -> void:
 
 func indep_construir_grafo_e_tensoes(v1, v2) -> void:
 	grafo = {
-		[PONTO_C, PONTO_A]: v1,
-		[PONTO_D, PONTO_B]: v2,
-		[PONTO_A, PONTO_C]: -v1,
-		[PONTO_B, PONTO_D]: -v2,
+		[INDEP_PONTO_C, INDEP_PONTO_A]: v1,
+		[INDEP_PONTO_D, INDEP_PONTO_B]: v2,
+		[INDEP_PONTO_A, INDEP_PONTO_C]: -v1,
+		[INDEP_PONTO_B, INDEP_PONTO_D]: -v2,
 	}
 	
 	for fio in hitboxes.fios_na_fonte:
@@ -98,10 +98,10 @@ func indep_construir_grafo_e_tensoes(v1, v2) -> void:
 	
 func indep_limpar_variaveis() -> void:
 	V_indep = {
-		PONTO_A: 0,
-		PONTO_B: 0,
-		PONTO_C: 0,
-		PONTO_D: 0,
+		INDEP_PONTO_A: 0,
+		INDEP_PONTO_B: 0,
+		INDEP_PONTO_C: 0,
+		INDEP_PONTO_D: 0,
 	}
 	
 	visitados.clear()
@@ -112,20 +112,20 @@ func modo_serie_paralelo() -> void:
 	var v2 = pot_voltagem2.saida
 	var ponto_comum = get_primeiro_comum()
 	if ponto_comum == -1:
-		ponto_comum = PONTO_C
+		ponto_comum = SP_PONTO_C
 	
 	var potenciais_serie = {
-		PONTO_A: v1 + v2,
-		PONTO_B: v1,
-		PONTO_C: 0,
-		PONTO_D: v1,
+		SP_PONTO_A: v1 + v2,
+		SP_PONTO_B: v1,
+		SP_PONTO_C: 0,
+		SP_PONTO_D: v1,
 	}
 	
 	var potenciais_paralelo = {
-		PONTO_A: v2,
-		PONTO_B: v1,
-		PONTO_C: 0,
-		PONTO_D: 0,
+		SP_PONTO_A: v2,
+		SP_PONTO_B: v1,
+		SP_PONTO_C: 0,
+		SP_PONTO_D: 0,
 	}
 	
 	var potenciais
@@ -135,10 +135,10 @@ func modo_serie_paralelo() -> void:
 		potenciais = potenciais_paralelo
 	
 	var tensao_comum = potenciais[ponto_comum]
-	var va = potenciais[PONTO_A] - tensao_comum
-	var vb = potenciais[PONTO_B] - tensao_comum
-	var vc = potenciais[PONTO_C] - tensao_comum
-	var vd = potenciais[PONTO_D] - tensao_comum
+	var va = potenciais[SP_PONTO_A] - tensao_comum
+	var vb = potenciais[SP_PONTO_B] - tensao_comum
+	var vc = potenciais[SP_PONTO_C] - tensao_comum
+	var vd = potenciais[SP_PONTO_D] - tensao_comum
 	
 	escrever_labels(vb, vc, va, vd)
 	
@@ -169,7 +169,7 @@ func modo_indep() -> void:
 	#$d4.text = str(V_indep[PONTO_B])
 	#$d6.text = str(V_indep[PONTO_D])
 	
-	escrever_labels(V_indep[PONTO_A], V_indep[PONTO_C], V_indep[PONTO_B], V_indep[PONTO_D])
+	escrever_labels(V_indep[INDEP_PONTO_A], V_indep[INDEP_PONTO_C], V_indep[INDEP_PONTO_B], V_indep[INDEP_PONTO_D])
 	
 func calcular_potenciais() -> void:
 	if !(botao.button_pressed):

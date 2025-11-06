@@ -148,7 +148,7 @@ func abrir_popup_para_saida(saida: int, hitbox: hitbox_saida) -> void:
 	#		break
 	
 	var pode_definir_comum = (!fonte_possui_comum) and (!fonte_possui_curto) and (!e_fonte_5v)
-	var pode_definir_curto = (!fonte_possui_comum) and (!fonte_possui_curto)
+	#var pode_definir_curto = (!fonte_possui_comum) and (!fonte_possui_curto)
 	var pode_definir_fios = (seletora.estado == enums.ESTADOS_FONTE.INDEP) and (fios_na_fonte.size() <= LIMITE_FIOS)
 	
 	if selecao_possui_comum:
@@ -157,10 +157,10 @@ func abrir_popup_para_saida(saida: int, hitbox: hitbox_saida) -> void:
 		popup_comum.add_item("Definir ponto comum", IDS_POPUP.DEFINIR_COMUM)
 		
 	if !e_fonte_5v:
-		if selecao_possui_curto:
-			popup_comum.add_item("Remover curto", IDS_POPUP.REMOVER_CURTO)
-		elif pode_definir_curto:
-			popup_comum.add_item("Definir curto", IDS_POPUP.DEFINIR_CURTO)
+		#if selecao_possui_curto:
+		#	popup_comum.add_item("Remover curto", IDS_POPUP.REMOVER_CURTO)
+		#elif pode_definir_curto:
+		#	popup_comum.add_item("Definir curto", IDS_POPUP.DEFINIR_CURTO)
 			
 		if pode_definir_fios:
 			if fio_sendo_criado.is_empty():
@@ -312,38 +312,38 @@ func limitar_comuns() -> void:
 		fonte_modificada.emit()
 
 # curtos
-func definir_curto(saida: int) -> void:
-	var sprite = sprites_curtos[saida]
-	if sprite in sprites_ativos:
-		return
-	
-	for id in sprites_curtos.keys():
-		if sprites_curtos[id] == sprite:
-			curtos_numeros_ativos.append(id)
-			
-	var fonte = enums.SAIDA_PARA_FONTE[saida]
-	if !(fonte in fontes_em_curto):
-		fontes_em_curto.append(fonte)
-	
-	sprite.visible = true
-	sprites_ativos.append(sprite)
-	fazer_tween_sprite(sprite, true)
-
-func remover_curto(saida: int) -> void:
-	var sprite = sprites_curtos[saida]
-	if !(sprite in sprites_ativos):
-		return
-		
-	for id in sprites_curtos.keys():
-		if sprites_curtos[id] == sprite:
-			curtos_numeros_ativos.erase(id)
-			
-	var fonte = enums.SAIDA_PARA_FONTE[saida]
-	if fonte in fontes_em_curto:
-		fontes_em_curto.erase(fonte)
-		
-	sprites_ativos.erase(sprite)
-	fazer_tween_sprite(sprite, false)
+#func definir_curto(saida: int) -> void:
+#	var sprite = sprites_curtos[saida]
+#	if sprite in sprites_ativos:
+#		return
+#	
+#	for id in sprites_curtos.keys():
+#		if sprites_curtos[id] == sprite:
+#			curtos_numeros_ativos.append(id)
+#			
+#	var fonte = enums.SAIDA_PARA_FONTE[saida]
+#	if !(fonte in fontes_em_curto):
+#		fontes_em_curto.append(fonte)
+#	
+#	sprite.visible = true
+#	sprites_ativos.append(sprite)
+#	fazer_tween_sprite(sprite, true)
+#
+#func remover_curto(saida: int) -> void:
+#	var sprite = sprites_curtos[saida]
+#	if !(sprite in sprites_ativos):
+#		return
+#		
+#	for id in sprites_curtos.keys():
+#		if sprites_curtos[id] == sprite:
+#			curtos_numeros_ativos.erase(id)
+#			
+#	var fonte = enums.SAIDA_PARA_FONTE[saida]
+#	if fonte in fontes_em_curto:
+#		fontes_em_curto.erase(fonte)
+#		
+#	sprites_ativos.erase(sprite)
+#	fazer_tween_sprite(sprite, false)
 
 # fios
 func adicionar_saida_fio(saida: int) -> void:
@@ -534,18 +534,34 @@ func get_fontes_com_comum() -> Array:
 	
 	return fontes_comum
 
-func get_fontes_com_curto() -> Array:
-	var fontes_curto = []
-	if fontes_curto.is_empty():
-		return fontes_curto
+#func get_fontes_com_curto() -> Array:
+#	var fontes_curto = []
+#	if fontes_curto.is_empty():
+#		return fontes_curto
+#	
+#	for saida in curtos_numeros_ativos:
+#		var fonte = enums.SAIDA_PARA_FONTE.get(saida, null)
+#		
+#		if fonte != null and fonte not in fontes_curto:
+#			fontes_curto.append(fonte)
+#		
+#	return fontes_curto
+
+func get_fontes_em_curto() -> Array:
+	var fontes_em_curto = []
+	if fios_na_fonte.is_empty():
+		return fontes_em_curto
 	
-	for saida in curtos_numeros_ativos:
-		var fonte = enums.SAIDA_PARA_FONTE.get(saida, null)
-		
-		if fonte != null and fonte not in fontes_curto:
-			fontes_curto.append(fonte)
-		
-	return fontes_curto
+	for fio in fios_na_fonte:
+		if fio == [enums.SAIDAS.POS_1, enums.SAIDAS.NEG_1]:
+			fontes_em_curto.append(enums.FONTES.FONTE_1)
+			continue
+			
+		if fio == [enums.SAIDAS.POS_2, enums.SAIDAS.NEG_2]:
+			fontes_em_curto.append(enums.FONTES.FONTE_2)
+			continue
+			
+	return fontes_em_curto
 
 func get_possui_fontes_interconectadas() -> bool:
 	if fios_na_fonte.is_empty():
@@ -568,10 +584,10 @@ func _on_popup_comum_id_pressed(id: int) -> void:
 			remover_comum(saida_selecionada)
 			fonte_modificada.emit()
 		
-		IDS_POPUP.DEFINIR_CURTO:
-			definir_curto(saida_selecionada)
-		IDS_POPUP.REMOVER_CURTO:
-			remover_curto(saida_selecionada)
+		#IDS_POPUP.DEFINIR_CURTO:
+		#	definir_curto(saida_selecionada)
+		#IDS_POPUP.REMOVER_CURTO:
+		#	remover_curto(saida_selecionada)
 			
 		IDS_POPUP.FIO_1:
 			posicionar_setinha(hitbox_selecionada)
@@ -601,10 +617,6 @@ func _on_chave_seletora_estado_alterado(novo_estado: Variant, _estado_anterior: 
 	
 	fonte_modificada.emit()
 	limitar_comuns()
-
-#func on_fio_clicado(fio, saidas) -> void:
-#	#fio_selecionado = fio
-#	abrir_popup_para_fio(fio, saidas)
 
 func _on_popup_comum_popup_hide() -> void:
 	mudar_textura_dos_fios()
