@@ -12,9 +12,8 @@ const LIMITE_FIOS = 4
 
 const CENA_FIO = preload("res://cenas/fio.tscn")
 
-const TEXTURA_FIO_NORMAL = preload("res://imagens/fio_teste.png")
+#const TEXTURA_FIO_NORMAL = preload("res://imagens/fio_teste.png")
 const TEXTURA_FIO_SELECAO = preload("res://imagens/fio_branco.png")
-
 const TEXTURAS_FIOS = [
 	preload("res://imagens/fio_1.png"),
 	preload("res://imagens/fio_2.png"),
@@ -101,7 +100,7 @@ func _ready() -> void:
 		if !(hitbox is hitbox_saida): continue
 		hitbox.emitir_saida.connect(abrir_popup_para_saida)
 		
-func _process(_delta) -> void:
+func _process(_delta: float) -> void:
 	if get_possui_fontes_interconectadas():
 		quantidade_de_comuns = 1
 		limitar_comuns()
@@ -110,7 +109,7 @@ func preparar_popup() -> void:
 	popup_comum.clear()
 	popup_comum.size = TAMANHO_POPUP
 	
-func mostrar_popup(posicao) -> void:
+func mostrar_popup(posicao: Vector2) -> void:
 	popup_comum.position = posicao
 	popup_comum.visible = (popup_comum.get_item_count() > 0)
 	
@@ -180,7 +179,7 @@ func abrir_popup_para_saida(saida: int, hitbox: hitbox_saida) -> void:
 	
 	mostrar_popup(hitbox.position + vetor_deslocamento)
 
-func abrir_popup_para_fio(fio: Line2D, saidas) -> void:
+func abrir_popup_para_fio(fio: Line2D, saidas: Array) -> void:
 	preparar_popup()
 	popup_comum.add_item("Remover fio", IDS_POPUP.REMOVER_FIO)
 	fio_selecionado = fio
@@ -395,6 +394,7 @@ func criar_fio() -> void:
 	
 	instancia_fio.redimensionar_hitbox()
 	instancia_fio.fio_clicado.connect(abrir_popup_para_fio)
+	#instancia_fio.fio_clicado.connect(on_fio_clicado)
 	
 	tween.tween_property(instancia_fio, "width", tamanho_desejado, 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	instancias_fios.append(instancia_fio)
@@ -446,6 +446,11 @@ func mudar_textura_dos_fios() -> void:
 		instancia_fio.usar_textura_armazenada()
 
 func comparar_ordem_texturas(textura_a: Resource, textura_b: Resource) -> bool:
+	# coloquei algumas anotações, pois essa função é dependente do nome do arquivo
+	# e pode ser meio confusa por isso
+	# -> fio_1.png, fio_2.png, fio_3.png, . . .
+	# ela usa o fato do numero ser separado pelo "_" para organizar a lista de texturas
+	
 	# pega o nome do arquivo do resource, ex: fio_1.png
 	var arquivo_a = textura_a.resource_path.get_file()
 	var arquivo_b = textura_b.resource_path.get_file()
@@ -460,7 +465,7 @@ func comparar_ordem_texturas(textura_a: Resource, textura_b: Resource) -> bool:
 	var n_a = int(base_a.split("_")[1])
 	var n_b = int(base_b.split("_")[1])
 	
-	# é feita comparação de qual é maior para organizar a lista
+	# é feita comparação de qual é maior para organizar a lista, priorizando o menor número
 	return n_a < n_b
 
 func organizar_lista_texturas() -> void:
@@ -474,6 +479,31 @@ func pegar_textura_fio_disponivel() -> Resource:
 	var textura = texturas_fios_disponiveis[0]
 	texturas_fios_disponiveis.erase(textura)
 	return textura
+
+func reorganizar_alturas() -> void:
+	for i in range(instancias_fios.size()):
+		var instancia_fio: linha_fio = instancias_fios[i]
+		var saida_1 = instancia_fio.saidas[0]
+		var saida_2 = instancia_fio.saidas[1]
+		
+		var hitbox_1 = saida_para_hitbox[saida_1]
+		var hitbox_2 = saida_para_hitbox[saida_2]
+		
+		var centro_y_1 = hitbox_1.position.y + hitbox_1.size.y / 2
+		var centro_y_2 = hitbox_2.position.y + hitbox_2.size.y / 2
+		
+		var ponto_2 = instancia_fio.points[1]
+		var ponto_3 = instancia_fio.points[2]
+		
+		var altura = ALTURA_FIOS - (20 * i)
+		
+		ponto_2.y = centro_y_1 + altura
+		ponto_3.y = centro_y_2 + altura
+		
+		instancia_fio.points[1] = ponto_2
+		instancia_fio.points[2] = ponto_3
+		
+		instancia_fio.redimensionar_hitbox()
 
 func armazenar_textura_fio(textura: Resource) -> void:
 	texturas_fios_disponiveis.append(textura)
@@ -555,6 +585,7 @@ func _on_popup_comum_id_pressed(id: int) -> void:
 		IDS_POPUP.REMOVER_FIO:
 			remover_fio(fio_selecionado, true)
 			fonte_modificada.emit()
+			reorganizar_alturas()
 		IDS_POPUP.CANCELAR_FIO:
 			setinha_util.visible = false
 			fio_sendo_criado.clear()
@@ -572,11 +603,8 @@ func _on_chave_seletora_estado_alterado(novo_estado: Variant, _estado_anterior: 
 	limitar_comuns()
 
 #func on_fio_clicado(fio, saidas) -> void:
-#	var saida = saidas[0]
-#	var hitbox = saida_para_hitbox[saida]
-#	fio_selecionado = fio
-#	
-#	#abrir_popup(saida, hitbox, true)
+#	#fio_selecionado = fio
+#	abrir_popup_para_fio(fio, saidas)
 
 func _on_popup_comum_popup_hide() -> void:
 	mudar_textura_dos_fios()
