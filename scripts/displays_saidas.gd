@@ -1,5 +1,11 @@
 extends Node
 
+const COR_DISPLAY_F1 = Color("5b6585")
+const COR_DISPLAY_F2 = Color("78568c")
+const COR_DISPLAY_5V = Color("444be4")
+
+const COR_DISPLAY_ERRO = Color("fccd00ff")
+
 @onready var hitboxes = $"../hitboxes"
 @onready var potenciometros = $"../potenciometros"
 @onready var pot_voltagem1 = $"../potenciometros/pot_voltagem1"
@@ -17,26 +23,69 @@ const INDEP_PONTO_B = enums.SAIDAS.POS_2
 const INDEP_PONTO_C = enums.SAIDAS.NEG_1
 const INDEP_PONTO_D = enums.SAIDAS.NEG_2
 
-@onready var labels = [$d1, $d3, $d4, $d6]
+const INDEP_POS_5V = enums.SAIDAS.POS_5V
+const INDEP_NEG_5V = enums.SAIDAS.NEG_5V
+
+@onready var d1: Label = $d1
+@onready var d3: Label = $d3
+@onready var d4: Label = $d4
+@onready var d6: Label = $d6
+
+@onready var d7: Label = $d7
+@onready var d8: Label = $d8
+
+@onready var labels = [d1, d3, d4, d6, d7, d8]
+@onready var labels_serie_paralelo = [d1, d3, d4, d6]
+
+@onready var visitado_para_label: Dictionary[int, Label] = {
+	INDEP_PONTO_A: d1,
+	INDEP_PONTO_B: d4,
+	INDEP_PONTO_C: d3,
+	INDEP_PONTO_D: d6,
+	
+	INDEP_POS_5V: d7,
+	INDEP_NEG_5V: d8,
+}
 
 var grafo = {}
 var V_indep = {}
 var visitados = []
-var ciclo_detectado = false
+var ciclo_detectado = false:
+	set(valor):
+		ciclo_detectado = valor
+		colorir_labels()
+
+func colorir_labels() -> void:
+	var cor = COR_DISPLAY_ERRO
+	for label: Label in labels:
+		if !ciclo_detectado:
+			cor = label.get_meta("cor_inicial")
+		#label.remove_theme_color_override("font_outline_color")
+		label.add_theme_color_override("font_outline_color", cor)
 
 func toggle_visibilidade_labels(visivel) -> void:
 	for label in labels:
 		label.visible = visivel
 
-func escrever_labels(d1, d2, d3, d4) -> void:
-	var valores = [d1, d2, d3, d4]
-	
-	for i in range(labels.size()):
-		var label = labels[i]
+#func escrever_labels(d1, d2, d3, d4) -> void:
+#	var valores = [d1, d2, d3, d4]
+#	
+#	for i in range(labels.size()):
+#		var label: Label = labels[i]
+#		var valor = valores[i]
+#		var str = "%.2f V" % valor
+#		
+#		#var sinal = sign(valor)
+#		#if sinal >= 0:
+#		#	str = "+" + str
+#		
+#		label.text = str
+
+func escrever_labels(valores: Array) -> void:
+	for i in range(min(labels.size(), valores.size())):
+		var label: Label = labels[i]
 		var valor = valores[i]
-		var str = str(valor)
-		
-		label.text = str
+		label.text = "%.2f V" % valor
 	
 func get_primeiro_comum() -> int:
 	var comuns = hitboxes.get_comuns()
@@ -90,6 +139,8 @@ func indep_construir_grafo_e_tensoes(v1, v2) -> void:
 		[INDEP_PONTO_D, INDEP_PONTO_B]: v2,
 		[INDEP_PONTO_A, INDEP_PONTO_C]: -v1,
 		[INDEP_PONTO_B, INDEP_PONTO_D]: -v2,
+		[INDEP_NEG_5V, INDEP_POS_5V]: 5,
+		[INDEP_POS_5V, INDEP_NEG_5V]: -5,
 	}
 	
 	for fio in hitboxes.fios_na_fonte:
@@ -102,12 +153,16 @@ func indep_limpar_variaveis() -> void:
 		INDEP_PONTO_B: 0,
 		INDEP_PONTO_C: 0,
 		INDEP_PONTO_D: 0,
+		INDEP_POS_5V: 0,
+		INDEP_NEG_5V: 0,
 	}
 	
 	visitados.clear()
 	ciclo_detectado = false
 
 func modo_serie_paralelo() -> void:
+	ciclo_detectado = false
+	
 	var v1 = pot_voltagem2.saida
 	var v2 = pot_voltagem2.saida
 	var ponto_comum = get_primeiro_comum()
@@ -128,19 +183,25 @@ func modo_serie_paralelo() -> void:
 		SP_PONTO_D: 0,
 	}
 	
-	var potenciais
+	var potenciais: Dictionary
 	if seletora.estado == enums.ESTADOS_FONTE.SERIES:
 		potenciais = potenciais_serie
 	else:
 		potenciais = potenciais_paralelo
-	
+		
 	var tensao_comum = potenciais[ponto_comum]
 	var va = potenciais[SP_PONTO_A] - tensao_comum
 	var vb = potenciais[SP_PONTO_B] - tensao_comum
 	var vc = potenciais[SP_PONTO_C] - tensao_comum
 	var vd = potenciais[SP_PONTO_D] - tensao_comum
 	
-	escrever_labels(vb, vc, va, vd)
+	for label in labels_serie_paralelo:
+		label.visible = true
+	
+	labels[4].visible = false
+	labels[5].visible = false
+	
+	escrever_labels([vb, vc, va, vd, 5, 0])
 	
 	#$d1.text = str(vb)
 	#$d3.text = str(vc)
@@ -159,9 +220,15 @@ func modo_indep() -> void:
 	for comum in comuns:
 		indep_percorre(comum, null)
 		
+	for label in labels:
+		label.visible = false
+
+	for visitado in visitados:
+		visitado_para_label[visitado].visible = true
+		
 	if ciclo_detectado:
 		for label in labels:
-			label.text = "!"
+			label.text = "!!!"
 		return
 	
 	#$d1.text = str(V_indep[PONTO_A])
@@ -169,7 +236,16 @@ func modo_indep() -> void:
 	#$d4.text = str(V_indep[PONTO_B])
 	#$d6.text = str(V_indep[PONTO_D])
 	
-	escrever_labels(V_indep[INDEP_PONTO_A], V_indep[INDEP_PONTO_C], V_indep[INDEP_PONTO_B], V_indep[INDEP_PONTO_D])
+	var va = V_indep[INDEP_PONTO_A]
+	var vc = V_indep[INDEP_PONTO_C]
+	var vb = V_indep[INDEP_PONTO_B]
+	var vd = V_indep[INDEP_PONTO_D]
+	
+	var v_pos_5v = V_indep[INDEP_POS_5V]
+	var v_neg_5v = V_indep[INDEP_NEG_5V]
+	var valores = [vb, vc, va, vd, v_pos_5v, v_neg_5v]
+	
+	escrever_labels(valores)
 	
 func calcular_potenciais() -> void:
 	if !(botao.button_pressed):
@@ -179,16 +255,36 @@ func calcular_potenciais() -> void:
 		modo_indep()
 	else:
 		modo_serie_paralelo()
+		
+func checar_fontes_em_zero() -> void:
+	if ciclo_detectado: return
+	
+	if potenciometros.get_fonte_zerada(enums.FONTES.FONTE_1):
+		labels[0].text = "%.2f V" % 0
+		labels[1].text = "%.2f V" % 0
+		
+	if potenciometros.get_fonte_zerada(enums.FONTES.FONTE_2):
+		labels[2].text = "%.2f V" % 0
+		labels[3].text = "%.2f V" % 0
+
+func _ready() -> void:
+	for label: Label in labels:
+		label.set_meta("cor_inicial", label.get_theme_color("font_outline_color"))
 
 func _on_botao_on_off_toggled(toggled_on: bool) -> void:
 	toggle_visibilidade_labels(toggled_on)
 	calcular_potenciais()
+	checar_fontes_em_zero()
 
 func _on_pot_voltagem_1_saida_alterada(_saida: Variant) -> void:
 	calcular_potenciais()
+	checar_fontes_em_zero()
 
 func _on_pot_voltagem_2_saida_alterada(_saida: Variant) -> void:
 	calcular_potenciais()
+	checar_fontes_em_zero()
 
 func _on_hitboxes_fonte_modificada() -> void:
 	calcular_potenciais()
+	checar_fontes_em_zero()
+	colorir_labels()

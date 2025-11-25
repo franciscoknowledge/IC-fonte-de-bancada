@@ -1,5 +1,5 @@
 extends Node
-const VALOR_REFERENCIA_ZERO = 0.5
+const VALOR_REFERENCIA_ZERO = 0.2
 
 @onready var pot_rotacao = $potenciometro_rotacao
 @onready var sprite_selecao = $sprite_selecao
@@ -52,6 +52,19 @@ func definir_saida(potenciometro: potenciometro_click, rotacao: float) -> void:
 	var rot_min = pot_rotacao.ANGULO_MIN
 	
 	var saida = remap(rotacao, rot_min, rot_max, 0, valor_saida_max)
+	#var corrente_1_em_zero = (pot_corrente1.saida < VALOR_REFERENCIA_ZERO)
+	#var corrente_2_em_zero = (pot_corrente2.saida < VALOR_REFERENCIA_ZERO)
+	#
+	#var tensao_1_em_zero = (pot_voltagem1.saida < VALOR_REFERENCIA_ZERO)
+	#var tensao_2_em_zero = (pot_voltagem2.saida < VALOR_REFERENCIA_ZERO)
+	#
+	#if potenciometro == pot_voltagem1 or potenciometro == pot_corrente1:
+	#	if tensao_1_em_zero or corrente_1_em_zero:
+	#		saida = 0
+	#		
+	#if potenciometro == pot_voltagem2 or potenciometro == pot_corrente2:
+	#	if tensao_2_em_zero or corrente_2_em_zero:
+	#		saida = 0
 	if potenciometro == pot_corrente1 and pot_voltagem1.saida < VALOR_REFERENCIA_ZERO:
 		saida = 0
 		
@@ -64,6 +77,19 @@ func definir_saida(potenciometro: potenciometro_click, rotacao: float) -> void:
 	potenciometro.rotation = rotacao
 	potenciometro.saida = saida
 	potenciometro.saida_alterada.emit(saida)
+	
+func get_potenciometro_em_zero(potenciometro: potenciometro_click) -> bool:
+	return (potenciometro.saida < VALOR_REFERENCIA_ZERO)
+
+func get_fonte_zerada(fonte: enums.FONTES) -> bool:
+	var potenciometros = []
+	if (fonte == enums.FONTES.FONTE_1):
+		potenciometros = [pot_voltagem1, pot_corrente1]
+	elif (fonte == enums.FONTES.FONTE_2):
+		potenciometros = [pot_voltagem2, pot_corrente2]
+	
+	var zerada = (get_potenciometro_em_zero(potenciometros[0]) or get_potenciometro_em_zero(potenciometros[1]))
+	return zerada
 
 func _on_potenciometro_rotacao_rotacionado(rotacao: float) -> void:
 	if !selecionado: return

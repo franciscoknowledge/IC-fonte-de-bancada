@@ -5,6 +5,7 @@ const COR_OFF = Color.TRANSPARENT
 
 @onready var hitboxes = $"../hitboxes"
 
+@onready var potenciometros = $"../potenciometros"
 @onready var pot_voltagem1 = $"../potenciometros/pot_voltagem1"
 @onready var pot_voltagem2 = $"../potenciometros/pot_voltagem2"
 @onready var pot_corrente1 = $"../potenciometros/pot_corrente1"
@@ -39,6 +40,14 @@ func _process(_delta: float) -> void:
 	var valor_corrente1 = 0
 	var valor_corrente2 = 0
 	
+	#if potenciometro == pot_voltagem1 or potenciometro == pot_corrente1:
+	#	if tensao_1_em_zero or corrente_1_em_zero:
+	#		saida = 0
+	#		
+	#if potenciometro == pot_voltagem2 or potenciometro == pot_corrente2:
+	#	if tensao_2_em_zero or corrente_2_em_zero:
+	#		saida = 0
+	
 	if fonte1_em_curto:
 		valor_corrente1 = pot_corrente1.saida
 	else:
@@ -48,6 +57,14 @@ func _process(_delta: float) -> void:
 		valor_corrente2 = pot_corrente2.saida
 	else:
 		valor_voltagem2 = pot_voltagem2.saida
+		
+	if potenciometros.get_fonte_zerada(enums.FONTES.FONTE_1):
+		valor_voltagem1 = 0
+		valor_corrente1 = 0
+		
+	if potenciometros.get_fonte_zerada(enums.FONTES.FONTE_2):
+		valor_voltagem2 = 0
+		valor_corrente2 = 0
 		
 	if !modo_indep:
 		valor_voltagem1 = valor_voltagem2

@@ -305,7 +305,9 @@ sharp_limit = 5.0
 visible = false
 z_index = 2
 position = Vector2(688, 651)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("19_sk7bf")
+offset = Vector2(0, -15)
 
 [node name="curtos" type="Node" parent="."]
 
@@ -325,55 +327,90 @@ script = ExtResource("19_43vsb")
 [node name="d1" type="Label" parent="displays_saidas"]
 visible = false
 z_index = 3
-offset_left = 658.0
-offset_top = 658.0
-offset_right = 728.0
-offset_bottom = 706.0
-theme_override_font_sizes/font_size = 30
-text = "+30V"
+offset_left = 644.0
+offset_top = 672.0
+offset_right = 714.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.3572212, 0.39480397, 0.5216171, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="d3" type="Label" parent="displays_saidas"]
 visible = false
 z_index = 3
-offset_left = 775.0
-offset_top = 658.0
-offset_right = 845.0
-offset_bottom = 706.0
-theme_override_font_sizes/font_size = 30
-text = "+30V"
+offset_left = 757.0
+offset_top = 672.0
+offset_right = 827.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.3572212, 0.39480397, 0.5216171, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="d4" type="Label" parent="displays_saidas"]
 visible = false
 z_index = 3
-offset_left = 857.0
-offset_top = 658.0
-offset_right = 927.0
-offset_bottom = 706.0
-theme_override_font_sizes/font_size = 30
-text = "+30V"
+offset_left = 860.0
+offset_top = 672.0
+offset_right = 930.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.47058824, 0.3372549, 0.54901963, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="d6" type="Label" parent="displays_saidas"]
 visible = false
 z_index = 3
-offset_left = 978.0
-offset_top = 658.0
-offset_right = 1048.0
-offset_bottom = 706.0
-theme_override_font_sizes/font_size = 30
-text = "+30V"
+offset_left = 974.0
+offset_top = 672.0
+offset_right = 1044.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.47197264, 0.33790484, 0.54729396, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="d7" type="Label" parent="displays_saidas"]
+visible = false
+z_index = 3
+offset_left = 1069.0
+offset_top = 672.0
+offset_right = 1139.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.26482067, 0.29482007, 0.8944741, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="d8" type="Label" parent="displays_saidas"]
+visible = false
+z_index = 3
+offset_left = 1147.0
+offset_top = 672.0
+offset_right = 1217.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.26666668, 0.29411766, 0.89411765, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="popup_comum" type="PopupMenu" parent="."]
 oversampling_override = 1.0
 size = Vector2i(202, 48)
-visible = true
 unfocusable = true
 theme = SubResource("Theme_6k825")
 allow_search = false

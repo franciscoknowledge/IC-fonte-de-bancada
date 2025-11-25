@@ -8,7 +8,7 @@ const TAMANHO_POPUP = Vector2(202, 48)
 
 const DESLOCAMENTO_Y_TWEEN_SPRITE = 25
 const ALTURA_FIOS = 110
-const LIMITE_FIOS = 4
+const LIMITE_FIOS = 2
 
 const CENA_FIO = preload("res://cenas/fio.tscn")
 
@@ -25,6 +25,7 @@ const TEXTURAS_FIOS = [
 enum IDS_POPUP {
 	DEFINIR_COMUM = 0,
 	REMOVER_COMUM = 1,
+	TROCAR_COMUM = 8,
 	
 	DEFINIR_CURTO = 3,
 	REMOVER_CURTO = 2,
@@ -91,6 +92,7 @@ var sprites_ativos = []
 var saida_selecionada = 0
 var hitbox_selecionada = null
 var fio_selecionado = []
+var comum_para_trocar = 0
 
 var texturas_fios_disponiveis = TEXTURAS_FIOS.duplicate()
 var quantidade_de_comuns = 2
@@ -123,6 +125,8 @@ func abrir_popup_para_saida(saida: int, hitbox: hitbox_saida) -> void:
 	var fonte_possui_curto = fonte in fontes_em_curto
 	var e_fonte_5v = (fonte == enums.FONTES.FONTE_5V)
 	
+	var comum_presente
+	
 	var selecao_possui_comum = saida in comuns_numeros_ativos
 	var selecao_possui_curto = saida in curtos_numeros_ativos
 	#var selecao_possui_fio = false
@@ -147,7 +151,12 @@ func abrir_popup_para_saida(saida: int, hitbox: hitbox_saida) -> void:
 	#		selecao_possui_fio = true
 	#		break
 	
-	var pode_definir_comum = (!fonte_possui_comum) and (!fonte_possui_curto) and (!e_fonte_5v)
+	for comum in comuns_numeros_ativos:
+		if enums.SAIDA_PARA_FONTE[comum] == fonte:
+			comum_presente = comum
+			break
+	
+	var pode_definir_comum = (!fonte_possui_comum) and (!fonte_possui_curto) and ((not e_fonte_5v) or seletora.estado == enums.ESTADOS_FONTE.INDEP)
 	#var pode_definir_curto = (!fonte_possui_comum) and (!fonte_possui_curto)
 	var pode_definir_fios = (seletora.estado == enums.ESTADOS_FONTE.INDEP) and (fios_na_fonte.size() <= LIMITE_FIOS)
 	
@@ -156,17 +165,27 @@ func abrir_popup_para_saida(saida: int, hitbox: hitbox_saida) -> void:
 	elif pode_definir_comum:
 		popup_comum.add_item("Definir ponto comum", IDS_POPUP.DEFINIR_COMUM)
 		
-	if !e_fonte_5v:
-		#if selecao_possui_curto:
-		#	popup_comum.add_item("Remover curto", IDS_POPUP.REMOVER_CURTO)
-		#elif pode_definir_curto:
-		#	popup_comum.add_item("Definir curto", IDS_POPUP.DEFINIR_CURTO)
-			
-		if pode_definir_fios:
-			if fio_sendo_criado.is_empty():
-				popup_comum.add_item("Fio 1", IDS_POPUP.FIO_1)
-			elif !fio_e_igual and !fio_redundante:
-				popup_comum.add_item("Fio 2", IDS_POPUP.FIO_2)
+	if !selecao_possui_comum and fontes_com_comum and comum_presente:
+		comum_para_trocar = comum_presente
+		popup_comum.add_item("Trocar comum", IDS_POPUP.TROCAR_COMUM)
+		
+	#if !e_fonte_5v:
+	#	#if selecao_possui_curto:
+	#	#	popup_comum.add_item("Remover curto", IDS_POPUP.REMOVER_CURTO)
+	#	#elif pode_definir_curto:
+	#	#	popup_comum.add_item("Definir curto", IDS_POPUP.DEFINIR_CURTO)
+	#		
+	#	if pode_definir_fios:
+	#		if fio_sendo_criado.is_empty():
+	#			popup_comum.add_item("Fio 1", IDS_POPUP.FIO_1)
+	#		elif !fio_e_igual and !fio_redundante:
+	#			popup_comum.add_item("Fio 2", IDS_POPUP.FIO_2)
+	
+	if pode_definir_fios:
+		if fio_sendo_criado.is_empty():
+			popup_comum.add_item("Fio 1", IDS_POPUP.FIO_1)
+		elif !fio_e_igual and !fio_redundante:
+			popup_comum.add_item("Fio 2", IDS_POPUP.FIO_2)
 				
 	if !fio_sendo_criado.is_empty():
 		popup_comum.add_item("Cancelar fio", IDS_POPUP.CANCELAR_FIO)
@@ -311,6 +330,10 @@ func limitar_comuns() -> void:
 		remover_comum(primeiro_comum)
 		fonte_modificada.emit()
 
+func trocar_comum(inicio: int, fim: int) -> void:
+	remover_comum(inicio)
+	definir_comum(fim)
+
 # curtos
 #func definir_curto(saida: int) -> void:
 #	var sprite = sprites_curtos[saida]
@@ -354,6 +377,9 @@ func criar_fio() -> void:
 	if fio_sendo_criado.size() != 2:
 		fio_sendo_criado.clear()
 		return
+		
+	var instancia_fio: linha_fio = CENA_FIO.instantiate()
+	add_child(instancia_fio)
 	
 	var fio = [fio_sendo_criado[0], fio_sendo_criado[1]]
 	fio.sort()
@@ -362,10 +388,7 @@ func criar_fio() -> void:
 	fios_na_fonte.append(fio)
 	
 	var tween = create_tween()
-	var tamanho_desejado = 15
-	
-	var instancia_fio: linha_fio = CENA_FIO.instantiate()
-	add_child(instancia_fio)
+	var tamanho_desejado = instancia_fio.tamanho
 	
 	#var linha = LINHA_BASE.duplicate()
 	var altura = ALTURA_FIOS - (20 * (fios_na_fonte.size() - 1))
@@ -392,7 +415,7 @@ func criar_fio() -> void:
 	instancia_fio.add_point(ponto_3)
 	instancia_fio.add_point(ponto_4)
 	
-	instancia_fio.redimensionar_hitbox()
+	instancia_fio.redimensionar_hitboxes()
 	instancia_fio.fio_clicado.connect(abrir_popup_para_fio)
 	#instancia_fio.fio_clicado.connect(on_fio_clicado)
 	
@@ -427,6 +450,7 @@ func remover_fio(fio: linha_fio, fazer_tween: bool) -> void:
 	var indice = fios_na_fonte.find(saidas)
 	if indice < 0: return
 	
+	fio.desabilitar = true
 	fios_na_fonte.remove_at(indice)
 	instancias_fios.remove_at(indice)
 	armazenar_textura_fio(fio.textura_armazenada)
@@ -503,7 +527,7 @@ func reorganizar_alturas() -> void:
 		instancia_fio.points[1] = ponto_2
 		instancia_fio.points[2] = ponto_3
 		
-		instancia_fio.redimensionar_hitbox()
+		instancia_fio.redimensionar_hitboxes()
 
 func armazenar_textura_fio(textura: Resource) -> void:
 	texturas_fios_disponiveis.append(textura)
@@ -583,6 +607,9 @@ func _on_popup_comum_id_pressed(id: int) -> void:
 		IDS_POPUP.REMOVER_COMUM:
 			remover_comum(saida_selecionada)
 			fonte_modificada.emit()
+		IDS_POPUP.TROCAR_COMUM:
+			trocar_comum(comum_para_trocar, saida_selecionada)
+			fonte_modificada.emit()
 		
 		#IDS_POPUP.DEFINIR_CURTO:
 		#	definir_curto(saida_selecionada)
@@ -614,6 +641,10 @@ func _on_chave_seletora_estado_alterado(novo_estado: Variant, _estado_anterior: 
 		quantidade_de_comuns = 1
 	else:
 		quantidade_de_comuns = 2
+		
+	for comum in comuns_numeros_ativos.duplicate():
+		if enums.SAIDA_PARA_FONTE[comum] == enums.FONTES.FONTE_5V:
+			remover_comum(comum)
 	
 	fonte_modificada.emit()
 	limitar_comuns()
