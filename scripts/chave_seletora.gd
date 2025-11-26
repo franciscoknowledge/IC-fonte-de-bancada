@@ -1,5 +1,5 @@
 extends TextureButton
-class_name chave_seletora
+class_name ChaveSeletora
 
 signal estado_alterado(novo_estado, estado_anterior)
 

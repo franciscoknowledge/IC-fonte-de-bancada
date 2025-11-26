@@ -1,5 +1,5 @@
 extends Area2D
-class_name potenciometro_rotacao
+class_name PotenciometroRotacao
 
 signal rotacionado(r)
 

@@ -235,6 +235,13 @@ texture = ExtResource("15_c5f8c")
 
 [node name="hitboxes" type="Node" parent="."]
 script = ExtResource("16_6k825")
+comuns_numeros_ativos = null
+fontes_em_curto = null
+fontes_com_comum = null
+instancias_fios = null
+curtos_numeros_ativos = null
+fios_na_fonte = null
+fio_sendo_criado = null
 
 [node name="hitbox_saida1" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 662.0
@@ -425,7 +432,6 @@ allow_search = false
 [connection signal="estado_alterado" from="chave_seletora" to="hitboxes" method="_on_chave_seletora_estado_alterado"]
 [connection signal="toggled" from="botao_on_off" to="." method="_on_botao_on_off_toggled"]
 [connection signal="toggled" from="botao_on_off" to="luzes_potenciometros" method="_on_botao_on_off_toggled"]
-[connection signal="toggled" from="botao_on_off" to="luzes_chave_seletora" method="_on_botao_on_off_toggled"]
 [connection signal="toggled" from="botao_on_off" to="display" method="_on_botao_on_off_toggled"]
 [connection signal="toggled" from="botao_on_off" to="displays_saidas" method="_on_botao_on_off_toggled"]
 [connection signal="rotacionado" from="potenciometros/potenciometro_rotacao" to="potenciometros" method="_on_potenciometro_rotacao_rotacionado"]

@@ -11,13 +11,13 @@ const VALOR_REFERENCIA_ZERO = 0.2
 
 @onready var pots = [pot_voltagem1, pot_voltagem2, pot_corrente1, pot_corrente2]
 
-var selecionado: potenciometro_click
+var selecionado: PotenciometroClick
 
 func _ready() -> void:
 	var rot_inicial = pot_rotacao.ANGULO_MIN
 	pot_rotacao.visible = false
 	
-	for pot: potenciometro_click in pots:
+	for pot: PotenciometroClick in pots:
 		pot.rotation = rot_inicial
 
 func _on_pot_voltagem_1_pressed() -> void:
@@ -34,7 +34,7 @@ func _on_pot_corrente_2_pressed() -> void:
 	
 func _on_potenciometro_rotacao_rotacionado(rotacao: float) -> void:
 	if !selecionado: return
-	for pot: potenciometro_click in pots:
+	for pot: PotenciometroClick in pots:
 		definir_saida(pot, pot.rotation)
 		
 	definir_saida(selecionado, rotacao)
@@ -60,7 +60,7 @@ func _on_potenciometro_rotacao_rotacionado(rotacao: float) -> void:
 	#selecionado.saida = saida
 	#selecionado.saida_alterada.emit(saida)
 
-func selecionar(pot: potenciometro_click) -> void:
+func selecionar(pot: PotenciometroClick) -> void:
 	if selecionado != pot:
 		selecionado = pot
 		pot_rotacao.rotation = selecionado.rotation
@@ -73,7 +73,7 @@ func selecionar(pot: potenciometro_click) -> void:
 	sprite_selecao.visible = visivel
 	pot_rotacao.visible = visivel
 	
-func definir_saida(potenciometro: potenciometro_click, rotacao: float) -> void:
+func definir_saida(potenciometro: PotenciometroClick, rotacao: float) -> void:
 	var valor_saida_max = potenciometro.VALOR_MAXIMO
 	
 	var rot_max = pot_rotacao.ANGULO_MAX
@@ -106,7 +106,7 @@ func definir_saida(potenciometro: potenciometro_click, rotacao: float) -> void:
 	potenciometro.saida = saida
 	potenciometro.saida_alterada.emit(saida)
 	
-func get_potenciometro_em_zero(potenciometro: potenciometro_click) -> bool:
+func get_potenciometro_em_zero(potenciometro: PotenciometroClick) -> bool:
 	return (potenciometro.saida < VALOR_REFERENCIA_ZERO)
 
 func get_fonte_zerada(fonte: enums.FONTES) -> bool:

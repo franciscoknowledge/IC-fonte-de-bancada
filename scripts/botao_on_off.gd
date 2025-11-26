@@ -1,5 +1,5 @@
 extends TextureButton
-class_name botao_on_off
+class_name BotaoOnOff
 
 # constantes:
 const POS_INICIAL = Vector2(46, 37)

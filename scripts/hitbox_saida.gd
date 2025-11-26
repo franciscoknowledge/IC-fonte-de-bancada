@@ -1,8 +1,8 @@
 extends TextureButton
-class_name hitbox_saida
+class_name HitboxSaida
 
-@export var saida: enums.SAIDAS
-signal emitir_saida(saida: enums.SAIDAS, hitbox: hitbox_saida)
+@export var saida: enums.SAIDAS = enums.SAIDAS.POS_1
+signal emitir_saida(saida: enums.SAIDAS, hitbox: HitboxSaida)
 
 func _on_pressed() -> void:
 	emitir_saida.emit(saida, self)

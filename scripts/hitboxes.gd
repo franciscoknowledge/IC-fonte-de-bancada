@@ -81,7 +81,7 @@ enum IDS_POPUP {
 @export var comuns_numeros_ativos = []
 @export var fontes_em_curto = []
 @export var fontes_com_comum = []
-@export var instancias_fios = []
+@export var fios_fisicos = []
 @export var curtos_numeros_ativos = []
 @export var fios_na_fonte = []
 @export var fio_sendo_criado = []
@@ -98,9 +98,13 @@ var texturas_fios_disponiveis = TEXTURAS_FIOS.duplicate()
 var quantidade_de_comuns = 2
 
 func _ready() -> void:
-	for hitbox in hitboxes:
-		if !(hitbox is hitbox_saida): continue
-		hitbox.emitir_saida.connect(abrir_popup_para_saida)
+	for membro: Node in hitboxes:
+		if membro is HitboxSaida:
+			membro.emitir_saida.connect(abrir_popup_para_saida)
+	
+	#for hitbox in hitboxes:
+	#	if !(hitbox is HitboxSaida): continue
+	#	hitbox.emitir_saida.connect(abrir_popup_para_saida)
 		
 func _process(_delta: float) -> void:
 	if get_possui_fontes_interconectadas():
@@ -163,7 +167,7 @@ func mostrar_popup(posicao: Vector2) -> void:
 	popup_comum.position = posicao
 	popup_comum.visible = (popup_comum.get_item_count() > 0)
 	
-func abrir_popup_para_saida(saida: int, hitbox: hitbox_saida) -> void:
+func abrir_popup_para_saida(saida: int, hitbox: HitboxSaida) -> void:
 	preparar_popup()
 	saida_selecionada = saida
 	hitbox_selecionada = hitbox
@@ -176,7 +180,7 @@ func abrir_popup_para_saida(saida: int, hitbox: hitbox_saida) -> void:
 	var comum_presente
 	
 	var selecao_possui_comum = saida in comuns_numeros_ativos
-	var selecao_possui_curto = saida in curtos_numeros_ativos
+	#var selecao_possui_curto = saida in curtos_numeros_ativos
 	#var selecao_possui_fio = false
 	
 	var fio_resultante = []
@@ -326,8 +330,8 @@ func criar_fio() -> void:
 		fio_sendo_criado.clear()
 		return
 		
-	var instancia_fio: linha_fio = CENA_FIO.instantiate()
-	add_child(instancia_fio)
+	var fio_fisico: FioFisico = CENA_FIO.instantiate()
+	add_child(fio_fisico)
 	
 	var fio = [fio_sendo_criado[0], fio_sendo_criado[1]]
 	fio.sort()
@@ -336,7 +340,7 @@ func criar_fio() -> void:
 	fios_na_fonte.append(fio)
 	
 	var tween = create_tween()
-	var tamanho_desejado = instancia_fio.tamanho
+	var tamanho_desejado = fio_fisico.tamanho
 	
 	#var linha = LINHA_BASE.duplicate()
 	var altura = ALTURA_FIOS - (20 * (fios_na_fonte.size() - 1))
@@ -355,38 +359,38 @@ func criar_fio() -> void:
 	var ponto_3 = Vector2(centro_x_2, centro_y_1 + altura)
 	var ponto_4 = Vector2(centro_x_2, centro_y_2)
 	
-	instancia_fio.clear_points()
-	instancia_fio.width = 0
+	fio_fisico.clear_points()
+	fio_fisico.width = 0
 	
-	instancia_fio.add_point(ponto_1)
-	instancia_fio.add_point(ponto_2)
-	instancia_fio.add_point(ponto_3)
-	instancia_fio.add_point(ponto_4)
+	fio_fisico.add_point(ponto_1)
+	fio_fisico.add_point(ponto_2)
+	fio_fisico.add_point(ponto_3)
+	fio_fisico.add_point(ponto_4)
 	
-	instancia_fio.redimensionar_hitboxes()
-	instancia_fio.fio_clicado.connect(abrir_popup_para_fio)
+	fio_fisico.redimensionar_hitboxes()
+	fio_fisico.fio_clicado.connect(abrir_popup_para_fio)
 	
-	tween.tween_property(instancia_fio, "width", tamanho_desejado, 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-	instancias_fios.append(instancia_fio)
-	instancia_fio.saidas = fio
-	instancia_fio.armazenar_textura(pegar_textura_fio_disponivel())
+	tween.tween_property(fio_fisico, "width", tamanho_desejado, 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	fios_fisicos.append(fio_fisico)
+	fio_fisico.saidas = fio
+	fio_fisico.armazenar_textura(pegar_textura_fio_disponivel())
 
 func destruir_todos_fios() -> void:
-	for instancia_fio: linha_fio in instancias_fios.duplicate():
-		remover_fio(instancia_fio, true)
+	for fio_fisico: FioFisico in fios_fisicos.duplicate():
+		remover_fio(fio_fisico, true)
 	
-	instancias_fios.clear()
+	fios_fisicos.clear()
 	fios_na_fonte.clear()
 	fio_sendo_criado.clear()
 
-func remover_fio(fio: linha_fio, fazer_tween: bool) -> void:
+func remover_fio(fio: FioFisico, fazer_tween: bool) -> void:
 	var saidas = fio.saidas
 	var indice = fios_na_fonte.find(saidas)
 	if indice < 0: return
 	
 	fio.desabilitar = true
 	fios_na_fonte.remove_at(indice)
-	instancias_fios.remove_at(indice)
+	fios_fisicos.remove_at(indice)
 	armazenar_textura_fio(fio.textura_armazenada)
 	
 	if fazer_tween:
@@ -397,11 +401,11 @@ func remover_fio(fio: linha_fio, fazer_tween: bool) -> void:
 		fio.queue_free()
 
 func mudar_textura_dos_fios() -> void:
-	if instancias_fios.is_empty(): return
+	if fios_fisicos.is_empty(): return
 	
-	for instancia_fio: linha_fio in instancias_fios:
-		#instancia_fio.texture = TEXTURA_FIO_NORMAL
-		instancia_fio.usar_textura_armazenada()
+	for fio_fisico: FioFisico in fios_fisicos:
+		#fio_fisico.texture = TEXTURA_FIO_NORMAL
+		fio_fisico.usar_textura_armazenada()
 
 func comparar_ordem_texturas(textura_a: Resource, textura_b: Resource) -> bool:
 	# coloquei algumas anotações, pois essa função é dependente do nome do arquivo
@@ -439,10 +443,10 @@ func pegar_textura_fio_disponivel() -> Resource:
 	return textura
 
 func reorganizar_alturas() -> void:
-	for i in range(instancias_fios.size()):
-		var instancia_fio: linha_fio = instancias_fios[i]
-		var saida_1 = instancia_fio.saidas[0]
-		var saida_2 = instancia_fio.saidas[1]
+	for i in range(fios_fisicos.size()):
+		var fio_fisico: FioFisico = fios_fisicos[i]
+		var saida_1 = fio_fisico.saidas[0]
+		var saida_2 = fio_fisico.saidas[1]
 		
 		var hitbox_1 = saida_para_hitbox[saida_1]
 		var hitbox_2 = saida_para_hitbox[saida_2]
@@ -450,18 +454,18 @@ func reorganizar_alturas() -> void:
 		var centro_y_1 = hitbox_1.position.y + hitbox_1.size.y / 2
 		var centro_y_2 = hitbox_2.position.y + hitbox_2.size.y / 2
 		
-		var ponto_2 = instancia_fio.points[1]
-		var ponto_3 = instancia_fio.points[2]
+		var ponto_2 = fio_fisico.points[1]
+		var ponto_3 = fio_fisico.points[2]
 		
 		var altura = ALTURA_FIOS - (20 * i)
 		
 		ponto_2.y = centro_y_1 + altura
 		ponto_3.y = centro_y_2 + altura
 		
-		instancia_fio.points[1] = ponto_2
-		instancia_fio.points[2] = ponto_3
+		fio_fisico.points[1] = ponto_2
+		fio_fisico.points[2] = ponto_3
 		
-		instancia_fio.redimensionar_hitboxes()
+		fio_fisico.redimensionar_hitboxes()
 
 func armazenar_textura_fio(textura: Resource) -> void:
 	texturas_fios_disponiveis.append(textura)
@@ -484,7 +488,7 @@ func get_comuns_5v() -> Array:
 func get_fontes_com_comum() -> Array:
 	var fontes_comum = []
 	
-	for saida in comuns_numeros_ativos:
+	for saida: enums.SAIDAS in comuns_numeros_ativos:
 		var fonte = enums.SAIDA_PARA_FONTE.get(saida, null)
 		
 		if fonte != null and fonte not in fontes_comum:
@@ -493,7 +497,10 @@ func get_fontes_com_comum() -> Array:
 	return fontes_comum
 
 func get_fontes_em_curto() -> Array:
-	var fontes_em_curto = []
+	fontes_em_curto = []
+	if not fios_na_fonte:
+		return []
+	
 	if fios_na_fonte.is_empty():
 		return fontes_em_curto
 	
@@ -509,6 +516,9 @@ func get_fontes_em_curto() -> Array:
 	return fontes_em_curto
 
 func get_possui_fontes_interconectadas() -> bool:
+	if not fios_na_fonte:
+		return false
+	
 	if fios_na_fonte.is_empty():
 		return false
 	

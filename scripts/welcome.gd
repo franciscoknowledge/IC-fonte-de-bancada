@@ -15,13 +15,13 @@ signal update
 @onready var pots = [pot_voltagem_1, pot_voltagem_2, pot_corrente_1, pot_corrente_2]
 
 func _ready() -> void:
-	for pot: potenciometro_click in pots:
+	for pot: PotenciometroClick in pots:
 		pot.saida_alterada.connect(emitir_update_pot)
 
-func _on_chave_seletora_estado_alterado(novo_estado: Variant, estado_anterior: Variant) -> void:
+func _on_chave_seletora_estado_alterado(_novo_estado: Variant, _estado_anterior: Variant) -> void:
 	emitir_update()
 
-func _on_botao_on_off_toggled(toggled_on: bool) -> void:
+func _on_botao_on_off_toggled(_toggled_on: bool) -> void:
 	emitir_update()
 	
 func _on_hitboxes_alteracao_feita() -> void:
@@ -31,5 +31,5 @@ func emitir_update() -> void:
 	update.emit()
 
 # stupid!
-func emitir_update_pot(saida) -> void:
+func emitir_update_pot(_saida) -> void:
 	emitir_update()

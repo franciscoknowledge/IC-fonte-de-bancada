@@ -1,5 +1,5 @@
 extends TextureButton
-class_name potenciometro_click
+class_name PotenciometroClick
 
 signal saida_alterada(saida: float)
 

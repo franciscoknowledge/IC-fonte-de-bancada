@@ -1,5 +1,5 @@
 extends Line2D
-class_name linha_fio
+class_name FioFisico
 signal fio_clicado(saidas: Array)
 
 const ALTURA_HITBOX = 12
