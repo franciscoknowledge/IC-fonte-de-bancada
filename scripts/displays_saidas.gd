@@ -54,6 +54,19 @@ var ciclo_detectado = false:
 	set(valor):
 		ciclo_detectado = valor
 		colorir_labels()
+		
+func _ready() -> void:
+	for label: Label in labels:
+		label.set_meta("cor_inicial", label.get_theme_color("font_outline_color"))
+
+func _on_fonte_update() -> void:
+	calcular_potenciais()
+	checar_fontes_em_zero()
+	colorir_labels()
+
+func _on_botao_on_off_toggled(toggled_on: bool) -> void:
+	if toggled_on: return
+	toggle_visibilidade_labels(toggled_on)
 
 func colorir_labels() -> void:
 	var cor = COR_DISPLAY_ERRO
@@ -66,20 +79,6 @@ func colorir_labels() -> void:
 func toggle_visibilidade_labels(visivel) -> void:
 	for label in labels:
 		label.visible = visivel
-
-#func escrever_labels(d1, d2, d3, d4) -> void:
-#	var valores = [d1, d2, d3, d4]
-#	
-#	for i in range(labels.size()):
-#		var label: Label = labels[i]
-#		var valor = valores[i]
-#		var str = "%.2f V" % valor
-#		
-#		#var sinal = sign(valor)
-#		#if sinal >= 0:
-#		#	str = "+" + str
-#		
-#		label.text = str
 
 func escrever_labels(valores: Array) -> void:
 	for i in range(min(labels.size(), valores.size())):
@@ -266,25 +265,3 @@ func checar_fontes_em_zero() -> void:
 	if potenciometros.get_fonte_zerada(enums.FONTES.FONTE_2):
 		labels[2].text = "%.2f V" % 0
 		labels[3].text = "%.2f V" % 0
-
-func _ready() -> void:
-	for label: Label in labels:
-		label.set_meta("cor_inicial", label.get_theme_color("font_outline_color"))
-
-func _on_botao_on_off_toggled(toggled_on: bool) -> void:
-	toggle_visibilidade_labels(toggled_on)
-	calcular_potenciais()
-	checar_fontes_em_zero()
-
-func _on_pot_voltagem_1_saida_alterada(_saida: Variant) -> void:
-	calcular_potenciais()
-	checar_fontes_em_zero()
-
-func _on_pot_voltagem_2_saida_alterada(_saida: Variant) -> void:
-	calcular_potenciais()
-	checar_fontes_em_zero()
-
-func _on_hitboxes_fonte_modificada() -> void:
-	calcular_potenciais()
-	checar_fontes_em_zero()
-	colorir_labels()

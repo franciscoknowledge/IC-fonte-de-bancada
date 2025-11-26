@@ -9,7 +9,7 @@ const COR_ON = Color(1, 1, 1, 1)
 @onready var luz_paralell = $luz_paralell
 @onready var linha: Line2D = $linha
 
-@onready var luzes = {
+@onready var estado_para_luz = {
 	enums.ESTADOS_FONTE.SERIES: luz_series,
 	enums.ESTADOS_FONTE.PARALELL: luz_paralell,
 	enums.ESTADOS_FONTE.INDEP: luz_indep,
@@ -21,14 +21,14 @@ func _ready() -> void:
 	for luz: Sprite2D in [luz_indep, luz_series, luz_paralell]:
 		luz.modulate = COR_OFF
 	
-	luzes[seletora.estado].modulate = COR_ON
+	estado_para_luz[seletora.estado].modulate = COR_ON
 
-func _on_chave_seletora_estado_alterado(novo_estado: Variant, estado_anterior: Variant) -> void:
-	var ativar = luzes[novo_estado]
-	var desligar = luzes[estado_anterior]
+func _on_chave_seletora_estado_alterado(novo_estado: enums.ESTADOS_FONTE, estado_anterior: enums.ESTADOS_FONTE) -> void:
+	var ativar = estado_para_luz[novo_estado]
+	var desligar = estado_para_luz[estado_anterior]
 	tween_luz(ativar, desligar)
 
-func tween_luz(luz_ativar, luz_desligar) -> void:
+func tween_luz(luz_ativar: Sprite2D, luz_desligar: Sprite2D) -> void:
 	if tween:
 		tween.kill()
 	
@@ -41,4 +41,4 @@ func tween_luz(luz_ativar, luz_desligar) -> void:
 func criar_linha() -> void:
 	linha.clear_points()
 	linha.add_point(seletora.position + seletora.pivot_offset)
-	linha.add_point(luzes[seletora.estado].position)
+	linha.add_point(estado_para_luz[seletora.estado].position)

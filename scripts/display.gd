@@ -40,14 +40,6 @@ func _process(_delta: float) -> void:
 	var valor_corrente1 = 0
 	var valor_corrente2 = 0
 	
-	#if potenciometro == pot_voltagem1 or potenciometro == pot_corrente1:
-	#	if tensao_1_em_zero or corrente_1_em_zero:
-	#		saida = 0
-	#		
-	#if potenciometro == pot_voltagem2 or potenciometro == pot_corrente2:
-	#	if tensao_2_em_zero or corrente_2_em_zero:
-	#		saida = 0
-	
 	if fonte1_em_curto:
 		valor_corrente1 = pot_corrente1.saida
 	else:
@@ -74,6 +66,9 @@ func _process(_delta: float) -> void:
 	
 	display_voltagem2.text = "%05.2f" % valor_voltagem2
 	display_corrente2.text = "%05.2f" % valor_corrente2
+	
+func _on_botao_on_off_toggled(toggled_on: bool) -> void:
+	tornar_texto_visivel(toggled_on)
 
 func tornar_texto_visivel(on) -> void:
 	var cor
@@ -92,21 +87,3 @@ func tornar_texto_visivel(on) -> void:
 	tween.tween_property(display_voltagem2, "modulate", cor, 0.2).set_trans(Tween.TRANS_CIRC)
 	tween.tween_property(display_corrente1, "modulate", cor, 0.2).set_trans(Tween.TRANS_CIRC)
 	tween.tween_property(display_corrente2, "modulate", cor, 0.2).set_trans(Tween.TRANS_CIRC)
-
-#func _on_pot_voltagem_1_saida_alterada(saida: Variant) -> void:
-#	escrever_display(display_voltagem1, saida)
-#	
-#func _on_pot_voltagem_2_saida_alterada(saida: Variant) -> void:
-#	escrever_display(display_voltagem2, saida)
-#
-#func _on_pot_corrente_1_saida_alterada(saida: Variant) -> void:
-#	escrever_display(display_corrente1, saida)
-#
-#func _on_pot_corrente_2_saida_alterada(saida: Variant) -> void:
-#	escrever_display(display_corrente2, saida)
-#
-#func escrever_display(display, n) -> void:
-#	display.text = "%05.2f" % n
-
-func _on_botao_on_off_toggled(toggled_on: bool) -> void:
-	tornar_texto_visivel(toggled_on)

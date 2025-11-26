@@ -18,10 +18,10 @@ func _pressed() -> void:
 	disabled = true
 	liga_desliga()
 
+# logica do objeto:
 func abilitar_botao() -> void:
 	disabled = false
 
-# logica do objeto:
 func liga_desliga() -> void:
 	if tween:
 		tween.kill()

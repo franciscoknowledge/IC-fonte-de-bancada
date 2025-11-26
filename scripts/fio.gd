@@ -1,6 +1,6 @@
 extends Line2D
 class_name linha_fio
-signal fio_clicado(saidas)
+signal fio_clicado(saidas: Array)
 
 const ALTURA_HITBOX = 12
 const LARGURA_HITBOX = 12
@@ -84,9 +84,3 @@ func hitbox_clicada(_viewport: Node, event: InputEvent, _shape_idx: int) -> void
 		return
 	if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 		fio_clicado.emit(self, saidas)
-
-#func _on_hitbox_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-#	if !(event is InputEventMouseButton):
-#		return
-#	if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-#		fio_clicado.emit(self, saidas)

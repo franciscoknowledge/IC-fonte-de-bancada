@@ -31,6 +31,34 @@ func _on_pot_corrente_1_pressed() -> void:
 
 func _on_pot_corrente_2_pressed() -> void:
 	selecionar(pot_corrente2)
+	
+func _on_potenciometro_rotacao_rotacionado(rotacao: float) -> void:
+	if !selecionado: return
+	for pot: potenciometro_click in pots:
+		definir_saida(pot, pot.rotation)
+		
+	definir_saida(selecionado, rotacao)
+	#if !selecionado: return
+	#
+	#if (selecionado == pot_corrente1) and (pot_voltagem1.saida == 0):
+	#	return
+	#	
+	#if (selecionado == pot_corrente2) and (pot_voltagem2.saida == 0):
+	#	return
+	#
+	#var valor_saida_max = selecionado.VALOR_MAXIMO
+	#
+	#var rot_max = pot_rotacao.ANGULO_MAX
+	#var rot_min = pot_rotacao.ANGULO_MIN
+	#
+	#var saida = remap(rotacao, rot_min, rot_max, 0, valor_saida_max)
+	#
+	#saida = clamp(saida, 0, valor_saida_max)
+	#saida = floor(saida * 100)/100
+	#
+	#selecionado.rotation = rotacao
+	#selecionado.saida = saida
+	#selecionado.saida_alterada.emit(saida)
 
 func selecionar(pot: potenciometro_click) -> void:
 	if selecionado != pot:
@@ -90,31 +118,3 @@ func get_fonte_zerada(fonte: enums.FONTES) -> bool:
 	
 	var zerada = (get_potenciometro_em_zero(potenciometros[0]) or get_potenciometro_em_zero(potenciometros[1]))
 	return zerada
-
-func _on_potenciometro_rotacao_rotacionado(rotacao: float) -> void:
-	if !selecionado: return
-	for pot: potenciometro_click in pots:
-		definir_saida(pot, pot.rotation)
-		
-	definir_saida(selecionado, rotacao)
-	#if !selecionado: return
-	#
-	#if (selecionado == pot_corrente1) and (pot_voltagem1.saida == 0):
-	#	return
-	#	
-	#if (selecionado == pot_corrente2) and (pot_voltagem2.saida == 0):
-	#	return
-	#
-	#var valor_saida_max = selecionado.VALOR_MAXIMO
-	#
-	#var rot_max = pot_rotacao.ANGULO_MAX
-	#var rot_min = pot_rotacao.ANGULO_MIN
-	#
-	#var saida = remap(rotacao, rot_min, rot_max, 0, valor_saida_max)
-	#
-	#saida = clamp(saida, 0, valor_saida_max)
-	#saida = floor(saida * 100)/100
-	#
-	#selecionado.rotation = rotacao
-	#selecionado.saida = saida
-	#selecionado.saida_alterada.emit(saida)

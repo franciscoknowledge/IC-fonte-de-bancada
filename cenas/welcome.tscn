@@ -1,6 +1,7 @@
-[gd_scene load_steps=23 format=3 uid="uid://dvr4tqc4b2uay"]
+[gd_scene load_steps=25 format=3 uid="uid://dvr4tqc4b2uay"]
 
 [ext_resource type="Texture2D" uid="uid://bc0k781dn8iwk" path="res://imagens/fonte_fundo.png" id="1_5134n"]
+[ext_resource type="Script" uid="uid://bwr13nr1me3sf" path="res://scripts/welcome.gd" id="1_gkxuq"]
 [ext_resource type="PackedScene" uid="uid://bo5a58jpjtrf2" path="res://cenas/chave_seletora.tscn" id="2_cnejx"]
 [ext_resource type="Script" uid="uid://d2ekrgo21y6sf" path="res://scripts/potenciometros.gd" id="3_cnejx"]
 [ext_resource type="PackedScene" uid="uid://cjr7rv0vblo0e" path="res://cenas/potenciometro_click.tscn" id="4_t7un0"]
@@ -12,6 +13,7 @@
 [ext_resource type="Script" uid="uid://lhlx3ohmd1x8" path="res://scripts/botao_on_off.gd" id="8_o6v8g"]
 [ext_resource type="Texture2D" uid="uid://d1xvr7asfehvk" path="res://imagens/botao_on_off_circulo.png" id="8_w3u5a"]
 [ext_resource type="PackedScene" uid="uid://bjuol1tmatima" path="res://cenas/potenciometro_rotacao.tscn" id="10_o6v8g"]
+[ext_resource type="Script" uid="uid://d4gq3o5gi00rl" path="res://luzes_potenciometros.gd" id="10_se5ov"]
 [ext_resource type="Script" uid="uid://2qjiw0us2r52" path="res://scripts/display.gd" id="12_ucaa7"]
 [ext_resource type="FontFile" uid="uid://du0qkpg1uc6j4" path="res://fontes/lcd-5x7-segment-monospace.ttf" id="14_1rfei"]
 [ext_resource type="Texture2D" uid="uid://dws64msrlebks" path="res://imagens/comum.png" id="15_c5f8c"]
@@ -26,6 +28,7 @@
 default_font_size = 22
 
 [node name="fonte" type="Node2D"]
+script = ExtResource("1_gkxuq")
 metadata/_edit_lock_ = true
 
 [node name="fundo" type="Sprite2D" parent="."]
@@ -95,6 +98,7 @@ offset_bottom = 493.0
 VALOR_MAXIMO = 3.0
 
 [node name="luzes_potenciometros" type="Node" parent="."]
+script = ExtResource("10_se5ov")
 
 [node name="voltagem1" type="Sprite2D" parent="luzes_potenciometros"]
 position = Vector2(537, 287)
@@ -415,8 +419,13 @@ unfocusable = true
 theme = SubResource("Theme_6k825")
 allow_search = false
 
+[connection signal="update" from="." to="luzes_potenciometros" method="_on_fonte_update"]
+[connection signal="update" from="." to="displays_saidas" method="_on_fonte_update"]
+[connection signal="estado_alterado" from="chave_seletora" to="." method="_on_chave_seletora_estado_alterado"]
 [connection signal="estado_alterado" from="chave_seletora" to="luzes_chave_seletora" method="_on_chave_seletora_estado_alterado"]
 [connection signal="estado_alterado" from="chave_seletora" to="hitboxes" method="_on_chave_seletora_estado_alterado"]
+[connection signal="toggled" from="botao_on_off" to="." method="_on_botao_on_off_toggled"]
+[connection signal="toggled" from="botao_on_off" to="luzes_potenciometros" method="_on_botao_on_off_toggled"]
 [connection signal="toggled" from="botao_on_off" to="display" method="_on_botao_on_off_toggled"]
 [connection signal="toggled" from="botao_on_off" to="displays_saidas" method="_on_botao_on_off_toggled"]
 [connection signal="rotacionado" from="potenciometros/potenciometro_rotacao" to="potenciometros" method="_on_potenciometro_rotacao_rotacionado"]
@@ -430,6 +439,6 @@ allow_search = false
 [connection signal="saida_alterada" from="potenciometros/pot_corrente1" to="display" method="_on_pot_corrente_1_saida_alterada"]
 [connection signal="pressed" from="potenciometros/pot_corrente2" to="potenciometros" method="_on_pot_corrente_2_pressed"]
 [connection signal="saida_alterada" from="potenciometros/pot_corrente2" to="display" method="_on_pot_corrente_2_saida_alterada"]
-[connection signal="fonte_modificada" from="hitboxes" to="displays_saidas" method="_on_hitboxes_fonte_modificada"]
+[connection signal="alteracao_feita" from="hitboxes" to="." method="_on_hitboxes_alteracao_feita"]
 [connection signal="id_pressed" from="popup_comum" to="hitboxes" method="_on_popup_comum_id_pressed"]
 [connection signal="popup_hide" from="popup_comum" to="hitboxes" method="_on_popup_comum_popup_hide"]

@@ -1,5 +1,5 @@
 extends Node
-signal fonte_modificada
+signal alteracao_feita
 
 const COR_TRANSPARENTE = Color.TRANSPARENT
 const COR_BRANCO = Color.WHITE
@@ -106,6 +106,54 @@ func _process(_delta: float) -> void:
 	if get_possui_fontes_interconectadas():
 		quantidade_de_comuns = 1
 		limitar_comuns()
+		
+func _on_popup_comum_id_pressed(id: int) -> void:
+	match id:
+		IDS_POPUP.DEFINIR_COMUM:
+			definir_comum(saida_selecionada)
+			alteracao_feita.emit()
+		IDS_POPUP.REMOVER_COMUM:
+			remover_comum(saida_selecionada)
+			alteracao_feita.emit()
+		IDS_POPUP.TROCAR_COMUM:
+			trocar_comum(comum_para_trocar, saida_selecionada)
+			alteracao_feita.emit()
+			
+		IDS_POPUP.FIO_1:
+			posicionar_setinha(hitbox_selecionada)
+			adicionar_saida_fio(saida_selecionada)
+		IDS_POPUP.FIO_2:
+			adicionar_saida_fio(saida_selecionada)
+			criar_fio()
+			setinha_util.visible = false
+			alteracao_feita.emit()
+			
+		IDS_POPUP.REMOVER_FIO:
+			remover_fio(fio_selecionado, true)
+			alteracao_feita.emit()
+			reorganizar_alturas()
+		IDS_POPUP.CANCELAR_FIO:
+			setinha_util.visible = false
+			fio_sendo_criado.clear()
+		
+	limitar_comuns()
+
+func _on_chave_seletora_estado_alterado(novo_estado: Variant, _estado_anterior: Variant) -> void:
+	if (novo_estado != enums.ESTADOS_FONTE.INDEP):
+		destruir_todos_fios()
+		quantidade_de_comuns = 1
+	else:
+		quantidade_de_comuns = 2
+		
+	for comum: enums.SAIDAS in comuns_numeros_ativos.duplicate():
+		if enums.SAIDA_PARA_FONTE[comum] == enums.FONTES.FONTE_5V:
+			remover_comum(comum)
+	
+	alteracao_feita.emit()
+	limitar_comuns()
+
+func _on_popup_comum_popup_hide() -> void:
+	mudar_textura_dos_fios()
 
 func preparar_popup() -> void:
 	popup_comum.clear()
@@ -145,13 +193,8 @@ func abrir_popup_para_saida(saida: int, hitbox: hitbox_saida) -> void:
 			
 		if (fio_resultante[0] == fio_resultante[1]):
 			fio_redundante = true
-	
-	#for fio in fios_na_fonte:
-	#	if fio.has(saida):
-	#		selecao_possui_fio = true
-	#		break
-	
-	for comum in comuns_numeros_ativos:
+			
+	for comum: enums.SAIDAS in comuns_numeros_ativos:
 		if enums.SAIDA_PARA_FONTE[comum] == fonte:
 			comum_presente = comum
 			break
@@ -168,18 +211,6 @@ func abrir_popup_para_saida(saida: int, hitbox: hitbox_saida) -> void:
 	if !selecao_possui_comum and fontes_com_comum and comum_presente:
 		comum_para_trocar = comum_presente
 		popup_comum.add_item("Trocar comum", IDS_POPUP.TROCAR_COMUM)
-		
-	#if !e_fonte_5v:
-	#	#if selecao_possui_curto:
-	#	#	popup_comum.add_item("Remover curto", IDS_POPUP.REMOVER_CURTO)
-	#	#elif pode_definir_curto:
-	#	#	popup_comum.add_item("Definir curto", IDS_POPUP.DEFINIR_CURTO)
-	#		
-	#	if pode_definir_fios:
-	#		if fio_sendo_criado.is_empty():
-	#			popup_comum.add_item("Fio 1", IDS_POPUP.FIO_1)
-	#		elif !fio_e_igual and !fio_redundante:
-	#			popup_comum.add_item("Fio 2", IDS_POPUP.FIO_2)
 	
 	if pode_definir_fios:
 		if fio_sendo_criado.is_empty():
@@ -215,55 +246,6 @@ func abrir_popup_para_fio(fio: Line2D, saidas: Array) -> void:
 	
 	fio.texture = TEXTURA_FIO_SELECAO
 	mostrar_popup(Vector2(posicao_x, posicao_y))
-	
-#func abrir_popup(saida: int, hitbox: hitbox_saida, fio: bool) -> void:
-#	var selecao_possui_comum = saida in comuns_numeros_ativos
-#	var selecao_possui_curto = saida in curtos_numeros_ativos
-#	var selecao_possui_fio = false
-#	
-#	for fio_array in fios_na_fonte:
-#		if fio_array.has(saida):
-#			selecao_possui_fio = true
-#			break
-#	
-#	var fonte = enums.SAIDA_PARA_FONTE[saida]
-#	var fonte_possui_comum = fonte in fontes_com_comum
-#	var fonte_possui_curto = fonte in fontes_em_curto
-#	var habilitar_curto = (fonte != enums.FONTES.FONTE_5V)
-#	
-#	saida_selecionada = saida
-#	hitbox_selecionada = hitbox
-#	popup_comum.clear()
-#	
-#	if !fio:
-#		if selecao_possui_comum:
-#			popup_comum.add_item("Remover ponto comum", IDS_POPUP.REMOVER_COMUM)
-#		elif (!fonte_possui_comum) and (!fonte_possui_curto) and (habilitar_curto):
-#			popup_comum.add_item("Definir ponto comum", IDS_POPUP.DEFINIR_COMUM)
-#			
-#		if habilitar_curto:
-#			if selecao_possui_curto:
-#				popup_comum.add_item("Remover curto", IDS_POPUP.REMOVER_CURTO)
-#			elif (!fonte_possui_comum) and (!fonte_possui_curto):
-#				popup_comum.add_item("Definir curto", IDS_POPUP.DEFINIR_CURTO)
-#			
-#			if (seletora.estado == enums.ESTADOS_FONTE.INDEP) and (fios_na_fonte.size() <= LIMITE_FIOS):
-#				if fio_sendo_criado.is_empty():
-#					popup_comum.add_item("Fio 1", IDS_POPUP.FIO_1)
-#				else:
-#					popup_comum.add_item("Fio 2", IDS_POPUP.FIO_2)
-#	else:
-#		popup_comum.add_item("Remover fio", IDS_POPUP.REMOVER_FIO)
-#	
-#	popup_comum.size = TAMANHO_POPUP
-#	var tamanho_hitbox = hitbox.size
-#	
-#	var deslocamento_x = tamanho_hitbox.x / 2 - TAMANHO_POPUP.x / 2
-#	var deslocamento_y = 100
-#	var vetor_deslocamento = Vector2(deslocamento_x, -deslocamento_y)
-#	
-#	popup_comum.position = hitbox.position + vetor_deslocamento
-#	popup_comum.visible = (popup_comum.get_item_count() > 0)
 
 func fazer_tween_sprite(sprite: Sprite2D, ativar: bool) -> void:
 	if mapa_tweens.has(sprite):
@@ -328,45 +310,11 @@ func limitar_comuns() -> void:
 	if sprites_ativos.size() > quantidade_de_comuns:
 		var primeiro_comum = comuns_numeros_ativos[0]
 		remover_comum(primeiro_comum)
-		fonte_modificada.emit()
+		alteracao_feita.emit()
 
 func trocar_comum(inicio: int, fim: int) -> void:
 	remover_comum(inicio)
 	definir_comum(fim)
-
-# curtos
-#func definir_curto(saida: int) -> void:
-#	var sprite = sprites_curtos[saida]
-#	if sprite in sprites_ativos:
-#		return
-#	
-#	for id in sprites_curtos.keys():
-#		if sprites_curtos[id] == sprite:
-#			curtos_numeros_ativos.append(id)
-#			
-#	var fonte = enums.SAIDA_PARA_FONTE[saida]
-#	if !(fonte in fontes_em_curto):
-#		fontes_em_curto.append(fonte)
-#	
-#	sprite.visible = true
-#	sprites_ativos.append(sprite)
-#	fazer_tween_sprite(sprite, true)
-#
-#func remover_curto(saida: int) -> void:
-#	var sprite = sprites_curtos[saida]
-#	if !(sprite in sprites_ativos):
-#		return
-#		
-#	for id in sprites_curtos.keys():
-#		if sprites_curtos[id] == sprite:
-#			curtos_numeros_ativos.erase(id)
-#			
-#	var fonte = enums.SAIDA_PARA_FONTE[saida]
-#	if fonte in fontes_em_curto:
-#		fontes_em_curto.erase(fonte)
-#		
-#	sprites_ativos.erase(sprite)
-#	fazer_tween_sprite(sprite, false)
 
 # fios
 func adicionar_saida_fio(saida: int) -> void:
@@ -417,28 +365,14 @@ func criar_fio() -> void:
 	
 	instancia_fio.redimensionar_hitboxes()
 	instancia_fio.fio_clicado.connect(abrir_popup_para_fio)
-	#instancia_fio.fio_clicado.connect(on_fio_clicado)
 	
 	tween.tween_property(instancia_fio, "width", tamanho_desejado, 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	instancias_fios.append(instancia_fio)
 	instancia_fio.saidas = fio
 	instancia_fio.armazenar_textura(pegar_textura_fio_disponivel())
-	
-	#linha.width = 0
-	#
-	#linha.clear_points()
-	#linha.add_point(ponto_1)
-	#linha.add_point(ponto_2)
-	#linha.add_point(ponto_3)
-	#linha.add_point(ponto_4)
-	#
-	#add_child(linha)
-	#tween.tween_property(linha, "width", tamanho_desejado, 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-	#instancias_fios.append(linha)
-	#instancia_fio.redimensionar_fio()
 
 func destruir_todos_fios() -> void:
-	for instancia_fio in instancias_fios.duplicate():
+	for instancia_fio: linha_fio in instancias_fios.duplicate():
 		remover_fio(instancia_fio, true)
 	
 	instancias_fios.clear()
@@ -558,19 +492,6 @@ func get_fontes_com_comum() -> Array:
 	
 	return fontes_comum
 
-#func get_fontes_com_curto() -> Array:
-#	var fontes_curto = []
-#	if fontes_curto.is_empty():
-#		return fontes_curto
-#	
-#	for saida in curtos_numeros_ativos:
-#		var fonte = enums.SAIDA_PARA_FONTE.get(saida, null)
-#		
-#		if fonte != null and fonte not in fontes_curto:
-#			fontes_curto.append(fonte)
-#		
-#	return fontes_curto
-
 func get_fontes_em_curto() -> Array:
 	var fontes_em_curto = []
 	if fios_na_fonte.is_empty():
@@ -598,56 +519,3 @@ func get_possui_fontes_interconectadas() -> bool:
 			return true
 			
 	return false
-
-func _on_popup_comum_id_pressed(id: int) -> void:
-	match id:
-		IDS_POPUP.DEFINIR_COMUM:
-			definir_comum(saida_selecionada)
-			fonte_modificada.emit()
-		IDS_POPUP.REMOVER_COMUM:
-			remover_comum(saida_selecionada)
-			fonte_modificada.emit()
-		IDS_POPUP.TROCAR_COMUM:
-			trocar_comum(comum_para_trocar, saida_selecionada)
-			fonte_modificada.emit()
-		
-		#IDS_POPUP.DEFINIR_CURTO:
-		#	definir_curto(saida_selecionada)
-		#IDS_POPUP.REMOVER_CURTO:
-		#	remover_curto(saida_selecionada)
-			
-		IDS_POPUP.FIO_1:
-			posicionar_setinha(hitbox_selecionada)
-			adicionar_saida_fio(saida_selecionada)
-		IDS_POPUP.FIO_2:
-			adicionar_saida_fio(saida_selecionada)
-			criar_fio()
-			setinha_util.visible = false
-			fonte_modificada.emit()
-			
-		IDS_POPUP.REMOVER_FIO:
-			remover_fio(fio_selecionado, true)
-			fonte_modificada.emit()
-			reorganizar_alturas()
-		IDS_POPUP.CANCELAR_FIO:
-			setinha_util.visible = false
-			fio_sendo_criado.clear()
-		
-	limitar_comuns()
-
-func _on_chave_seletora_estado_alterado(novo_estado: Variant, _estado_anterior: Variant) -> void:
-	if (novo_estado != enums.ESTADOS_FONTE.INDEP):
-		destruir_todos_fios()
-		quantidade_de_comuns = 1
-	else:
-		quantidade_de_comuns = 2
-		
-	for comum in comuns_numeros_ativos.duplicate():
-		if enums.SAIDA_PARA_FONTE[comum] == enums.FONTES.FONTE_5V:
-			remover_comum(comum)
-	
-	fonte_modificada.emit()
-	limitar_comuns()
-
-func _on_popup_comum_popup_hide() -> void:
-	mudar_textura_dos_fios()
