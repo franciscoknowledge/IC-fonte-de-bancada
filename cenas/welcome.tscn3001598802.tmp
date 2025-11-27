@@ -1,0 +1,438 @@
+[gd_scene load_steps=25 format=3 uid="uid://dvr4tqc4b2uay"]
+
+[ext_resource type="Texture2D" uid="uid://bc0k781dn8iwk" path="res://imagens/fonte_fundo.png" id="1_5134n"]
+[ext_resource type="Script" uid="uid://bwr13nr1me3sf" path="res://scripts/welcome.gd" id="1_gkxuq"]
+[ext_resource type="PackedScene" uid="uid://bo5a58jpjtrf2" path="res://cenas/chave_seletora.tscn" id="2_cnejx"]
+[ext_resource type="Script" uid="uid://d2ekrgo21y6sf" path="res://scripts/potenciometros.gd" id="3_cnejx"]
+[ext_resource type="PackedScene" uid="uid://cjr7rv0vblo0e" path="res://cenas/potenciometro_click.tscn" id="4_t7un0"]
+[ext_resource type="Texture2D" uid="uid://c6etocskeqmkv" path="res://imagens/luz_chave_seletora.png" id="5_tfot6"]
+[ext_resource type="Texture2D" uid="uid://t82dk2hnyuux" path="res://imagens/luz_potenciometro.png" id="6_ucaa7"]
+[ext_resource type="Texture2D" uid="uid://q7o53ivwc1g5" path="res://imagens/botao_on_off_fundo.png" id="7_5134n"]
+[ext_resource type="Script" uid="uid://bxnfucjnh7esb" path="res://scripts/luzes_chave_seletora.gd" id="7_tfot6"]
+[ext_resource type="Texture2D" uid="uid://b7de18x1unfcf" path="res://imagens/selecao.png" id="7_u3g5k"]
+[ext_resource type="Script" uid="uid://lhlx3ohmd1x8" path="res://scripts/botao_on_off.gd" id="8_o6v8g"]
+[ext_resource type="Texture2D" uid="uid://d1xvr7asfehvk" path="res://imagens/botao_on_off_circulo.png" id="8_w3u5a"]
+[ext_resource type="PackedScene" uid="uid://bjuol1tmatima" path="res://cenas/potenciometro_rotacao.tscn" id="10_o6v8g"]
+[ext_resource type="Script" uid="uid://d4gq3o5gi00rl" path="res://scripts/luzes_potenciometros.gd" id="10_se5ov"]
+[ext_resource type="Script" uid="uid://2qjiw0us2r52" path="res://scripts/display.gd" id="12_ucaa7"]
+[ext_resource type="FontFile" uid="uid://du0qkpg1uc6j4" path="res://fontes/lcd-5x7-segment-monospace.ttf" id="14_1rfei"]
+[ext_resource type="Texture2D" uid="uid://dws64msrlebks" path="res://imagens/comum.png" id="15_c5f8c"]
+[ext_resource type="Script" uid="uid://c2gkk34iwcyq8" path="res://scripts/hitboxes.gd" id="16_6k825"]
+[ext_resource type="PackedScene" uid="uid://bf5tdn7xm5mra" path="res://cenas/hitbox_saida.tscn" id="17_1rfei"]
+[ext_resource type="Texture2D" uid="uid://2onmx60ef424" path="res://imagens/curto.png" id="18_1rfei"]
+[ext_resource type="Texture2D" uid="uid://c5lyhyrhddvlh" path="res://imagens/fio_teste.png" id="18_bq1rw"]
+[ext_resource type="Script" uid="uid://blepu8owguah4" path="res://scripts/displays_saidas.gd" id="19_43vsb"]
+[ext_resource type="Texture2D" uid="uid://dntiw4ua3mbk6" path="res://imagens/setinha_util.png" id="19_sk7bf"]
+
+[sub_resource type="Theme" id="Theme_6k825"]
+default_font_size = 22
+
+[node name="fonte" type="Node2D"]
+script = ExtResource("1_gkxuq")
+metadata/_edit_lock_ = true
+
+[node name="fundo" type="Sprite2D" parent="."]
+position = Vector2(672, 337)
+texture = ExtResource("1_5134n")
+
+[node name="chave_seletora" parent="." instance=ExtResource("2_cnejx")]
+offset_left = 624.0
+offset_top = 392.0
+offset_right = 719.0
+offset_bottom = 487.0
+
+[node name="botao_on_off" type="TextureButton" parent="."]
+offset_left = 166.0
+offset_top = 540.0
+offset_right = 347.0
+offset_bottom = 615.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+toggle_mode = true
+texture_normal = ExtResource("7_5134n")
+script = ExtResource("8_o6v8g")
+metadata/_edit_use_anchors_ = true
+
+[node name="circulo" type="Sprite2D" parent="botao_on_off"]
+position = Vector2(46, 37)
+texture = ExtResource("8_w3u5a")
+
+[node name="potenciometros" type="Node" parent="."]
+script = ExtResource("3_cnejx")
+
+[node name="sprite_selecao" type="Sprite2D" parent="potenciometros"]
+visible = false
+position = Vector2(-115, 104)
+texture = ExtResource("7_u3g5k")
+
+[node name="potenciometro_rotacao" parent="potenciometros" instance=ExtResource("10_o6v8g")]
+position = Vector2(1439, 502)
+
+[node name="pot_voltagem1" parent="potenciometros" instance=ExtResource("4_t7un0")]
+offset_left = 366.0
+offset_top = 345.0
+offset_right = 514.0
+offset_bottom = 493.0
+VALOR_MAXIMO = 30.0
+
+[node name="pot_voltagem2" parent="potenciometros" instance=ExtResource("4_t7un0")]
+offset_left = 1022.0
+offset_top = 345.0
+offset_right = 1170.0
+offset_bottom = 493.0
+VALOR_MAXIMO = 30.0
+
+[node name="pot_corrente1" parent="potenciometros" instance=ExtResource("4_t7un0")]
+offset_left = 168.0
+offset_top = 345.0
+offset_right = 316.0
+offset_bottom = 493.0
+pivot_offset = Vector2(75, 74)
+VALOR_MAXIMO = 3.0
+
+[node name="pot_corrente2" parent="potenciometros" instance=ExtResource("4_t7un0")]
+offset_left = 840.0
+offset_top = 345.0
+offset_right = 988.0
+offset_bottom = 493.0
+VALOR_MAXIMO = 3.0
+
+[node name="luzes_potenciometros" type="Node" parent="."]
+script = ExtResource("10_se5ov")
+
+[node name="voltagem1" type="Sprite2D" parent="luzes_potenciometros"]
+position = Vector2(537, 287)
+texture = ExtResource("6_ucaa7")
+
+[node name="voltagem2" type="Sprite2D" parent="luzes_potenciometros"]
+position = Vector2(1087, 287)
+texture = ExtResource("6_ucaa7")
+
+[node name="corrente1" type="Sprite2D" parent="luzes_potenciometros"]
+position = Vector2(346.5, 287)
+texture = ExtResource("6_ucaa7")
+
+[node name="corrente2" type="Sprite2D" parent="luzes_potenciometros"]
+position = Vector2(897, 287)
+texture = ExtResource("6_ucaa7")
+
+[node name="luzes_chave_seletora" type="Node" parent="."]
+script = ExtResource("7_tfot6")
+
+[node name="linha" type="Line2D" parent="luzes_chave_seletora"]
+visible = false
+width = 3.0
+default_color = Color(1, 0, 0, 1)
+
+[node name="luz_indep" type="Sprite2D" parent="luzes_chave_seletora"]
+position = Vector2(672, 316)
+texture = ExtResource("5_tfot6")
+
+[node name="luz_series" type="Sprite2D" parent="luzes_chave_seletora"]
+position = Vector2(614, 345)
+texture = ExtResource("5_tfot6")
+
+[node name="luz_paralell" type="Sprite2D" parent="luzes_chave_seletora"]
+position = Vector2(730, 345)
+texture = ExtResource("5_tfot6")
+
+[node name="display" type="Node" parent="."]
+script = ExtResource("12_ucaa7")
+
+[node name="voltagem1" type="Label" parent="display"]
+modulate = Color(1, 0, 0, 1)
+offset_left = 445.0
+offset_top = 168.0
+offset_right = 659.0
+offset_bottom = 268.0
+theme_override_fonts/font = ExtResource("14_1rfei")
+theme_override_font_sizes/font_size = 50
+text = "00.00"
+metadata/_edit_use_anchors_ = true
+
+[node name="voltagem2" type="Label" parent="display"]
+modulate = Color(1, 0, 0, 1)
+offset_left = 938.0
+offset_top = 168.0
+offset_right = 1152.0
+offset_bottom = 268.0
+theme_override_fonts/font = ExtResource("14_1rfei")
+theme_override_font_sizes/font_size = 50
+text = "00.00"
+metadata/_edit_use_anchors_ = true
+
+[node name="corrente1" type="Label" parent="display"]
+modulate = Color(1, 0, 0, 1)
+offset_left = 200.0
+offset_top = 168.0
+offset_right = 414.0
+offset_bottom = 268.0
+theme_override_fonts/font = ExtResource("14_1rfei")
+theme_override_font_sizes/font_size = 50
+text = "00.00"
+metadata/_edit_use_anchors_ = true
+
+[node name="corrente2" type="Label" parent="display"]
+modulate = Color(1, 0, 0, 1)
+offset_left = 693.0
+offset_top = 168.0
+offset_right = 907.0
+offset_bottom = 268.0
+theme_override_fonts/font = ExtResource("14_1rfei")
+theme_override_font_sizes/font_size = 50
+text = "00.00"
+metadata/_edit_use_anchors_ = true
+
+[node name="comuns" type="Node" parent="."]
+
+[node name="c1" type="Sprite2D" parent="comuns"]
+visible = false
+z_index = 1
+position = Vector2(689, 653)
+texture = ExtResource("15_c5f8c")
+
+[node name="c2" type="Sprite2D" parent="comuns"]
+visible = false
+z_index = 1
+position = Vector2(751, 653)
+texture = ExtResource("15_c5f8c")
+
+[node name="c3" type="Sprite2D" parent="comuns"]
+visible = false
+z_index = 1
+position = Vector2(813, 653)
+texture = ExtResource("15_c5f8c")
+
+[node name="c4" type="Sprite2D" parent="comuns"]
+visible = false
+z_index = 1
+position = Vector2(889, 653)
+texture = ExtResource("15_c5f8c")
+
+[node name="c5" type="Sprite2D" parent="comuns"]
+visible = false
+z_index = 1
+position = Vector2(951, 653)
+texture = ExtResource("15_c5f8c")
+
+[node name="c6" type="Sprite2D" parent="comuns"]
+visible = false
+z_index = 1
+position = Vector2(1013, 653)
+texture = ExtResource("15_c5f8c")
+
+[node name="c7" type="Sprite2D" parent="comuns"]
+visible = false
+z_index = 1
+position = Vector2(1089, 653)
+texture = ExtResource("15_c5f8c")
+
+[node name="c8" type="Sprite2D" parent="comuns"]
+visible = false
+z_index = 1
+position = Vector2(1152, 653)
+texture = ExtResource("15_c5f8c")
+
+[node name="hitboxes" type="Node" parent="."]
+script = ExtResource("16_6k825")
+
+[node name="hitbox_saida1" parent="hitboxes" instance=ExtResource("17_1rfei")]
+offset_left = 662.0
+offset_top = 566.0
+offset_right = 715.0
+offset_bottom = 618.0
+
+[node name="hitbox_saida2" parent="hitboxes" instance=ExtResource("17_1rfei")]
+offset_left = 725.0
+offset_top = 566.0
+offset_right = 778.0
+offset_bottom = 618.0
+disabled = true
+saida = 2
+
+[node name="hitbox_saida3" parent="hitboxes" instance=ExtResource("17_1rfei")]
+offset_left = 787.0
+offset_top = 566.0
+offset_right = 840.0
+offset_bottom = 618.0
+saida = 3
+
+[node name="hitbox_saida4" parent="hitboxes" instance=ExtResource("17_1rfei")]
+offset_left = 862.0
+offset_top = 566.0
+offset_right = 915.0
+offset_bottom = 618.0
+saida = 4
+
+[node name="hitbox_saida5" parent="hitboxes" instance=ExtResource("17_1rfei")]
+offset_left = 925.0
+offset_top = 566.0
+offset_right = 978.0
+offset_bottom = 618.0
+disabled = true
+saida = 5
+
+[node name="hitbox_saida6" parent="hitboxes" instance=ExtResource("17_1rfei")]
+offset_left = 988.0
+offset_top = 566.0
+offset_right = 1041.0
+offset_bottom = 618.0
+saida = 6
+
+[node name="hitbox_saida7" parent="hitboxes" instance=ExtResource("17_1rfei")]
+offset_left = 1063.0
+offset_top = 565.0
+offset_right = 1116.0
+offset_bottom = 617.0
+saida = 7
+
+[node name="hitbox_saida8" parent="hitboxes" instance=ExtResource("17_1rfei")]
+offset_left = 1125.0
+offset_top = 565.0
+offset_right = 1178.0
+offset_bottom = 617.0
+saida = 8
+
+[node name="linha_base" type="Line2D" parent="hitboxes"]
+visible = false
+points = PackedVector2Array(100, -400, 100, -800, 400, -800, 400, -400)
+width = 15.0
+texture = ExtResource("18_bq1rw")
+texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+sharp_limit = 5.0
+
+[node name="setinha_util" type="Sprite2D" parent="hitboxes"]
+visible = false
+z_index = 2
+position = Vector2(688, 651)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("19_sk7bf")
+offset = Vector2(0, -15)
+
+[node name="curtos" type="Node" parent="."]
+
+[node name="c1" type="Sprite2D" parent="curtos"]
+visible = false
+position = Vector2(750, 631)
+texture = ExtResource("18_1rfei")
+
+[node name="c2" type="Sprite2D" parent="curtos"]
+visible = false
+position = Vector2(950, 631)
+texture = ExtResource("18_1rfei")
+
+[node name="displays_saidas" type="Node" parent="."]
+script = ExtResource("19_43vsb")
+
+[node name="d1" type="Label" parent="displays_saidas"]
+z_index = 3
+offset_left = 644.0
+offset_top = 672.0
+offset_right = 714.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.3572212, 0.39480397, 0.5216171, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="d3" type="Label" parent="displays_saidas"]
+z_index = 3
+offset_left = 757.0
+offset_top = 672.0
+offset_right = 827.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.3572212, 0.39480397, 0.5216171, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="d4" type="Label" parent="displays_saidas"]
+z_index = 3
+offset_left = 860.0
+offset_top = 672.0
+offset_right = 930.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.47058824, 0.3372549, 0.54901963, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="d6" type="Label" parent="displays_saidas"]
+z_index = 3
+offset_left = 974.0
+offset_top = 672.0
+offset_right = 1044.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.47197264, 0.33790484, 0.54729396, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="d7" type="Label" parent="displays_saidas"]
+z_index = 3
+offset_left = 1069.0
+offset_top = 672.0
+offset_right = 1139.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.26482067, 0.29482007, 0.8944741, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="d8" type="Label" parent="displays_saidas"]
+z_index = 3
+offset_left = 1169.0
+offset_top = 672.0
+offset_right = 1239.0
+offset_bottom = 720.0
+theme_override_colors/font_outline_color = Color(0.26666668, 0.29411766, 0.89411765, 1)
+theme_override_constants/outline_size = 13
+theme_override_font_sizes/font_size = 25
+text = "99.99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="popup_comum" type="PopupMenu" parent="."]
+oversampling_override = 1.0
+size = Vector2i(202, 48)
+unfocusable = true
+theme = SubResource("Theme_6k825")
+allow_search = false
+
+[connection signal="update" from="." to="luzes_potenciometros" method="_on_fonte_update"]
+[connection signal="update" from="." to="displays_saidas" method="_on_fonte_update"]
+[connection signal="estado_alterado" from="chave_seletora" to="." method="_on_chave_seletora_estado_alterado"]
+[connection signal="estado_alterado" from="chave_seletora" to="luzes_chave_seletora" method="_on_chave_seletora_estado_alterado"]
+[connection signal="estado_alterado" from="chave_seletora" to="hitboxes" method="_on_chave_seletora_estado_alterado"]
+[connection signal="toggled" from="botao_on_off" to="." method="_on_botao_on_off_toggled"]
+[connection signal="toggled" from="botao_on_off" to="luzes_potenciometros" method="_on_botao_on_off_toggled"]
+[connection signal="toggled" from="botao_on_off" to="luzes_chave_seletora" method="_on_botao_on_off_toggled"]
+[connection signal="toggled" from="botao_on_off" to="display" method="_on_botao_on_off_toggled"]
+[connection signal="toggled" from="botao_on_off" to="displays_saidas" method="_on_botao_on_off_toggled"]
+[connection signal="rotacionado" from="potenciometros/potenciometro_rotacao" to="potenciometros" method="_on_potenciometro_rotacao_rotacionado"]
+[connection signal="pressed" from="potenciometros/pot_voltagem1" to="potenciometros" method="_on_pot_voltagem_1_pressed"]
+[connection signal="saida_alterada" from="potenciometros/pot_voltagem1" to="display" method="_on_pot_voltagem_1_saida_alterada"]
+[connection signal="saida_alterada" from="potenciometros/pot_voltagem1" to="displays_saidas" method="_on_pot_voltagem_1_saida_alterada"]
+[connection signal="pressed" from="potenciometros/pot_voltagem2" to="potenciometros" method="_on_pot_voltagem_2_pressed"]
+[connection signal="saida_alterada" from="potenciometros/pot_voltagem2" to="display" method="_on_pot_voltagem_2_saida_alterada"]
+[connection signal="saida_alterada" from="potenciometros/pot_voltagem2" to="displays_saidas" method="_on_pot_voltagem_2_saida_alterada"]
+[connection signal="pressed" from="potenciometros/pot_corrente1" to="potenciometros" method="_on_pot_corrente_1_pressed"]
+[connection signal="saida_alterada" from="potenciometros/pot_corrente1" to="display" method="_on_pot_corrente_1_saida_alterada"]
+[connection signal="pressed" from="potenciometros/pot_corrente2" to="potenciometros" method="_on_pot_corrente_2_pressed"]
+[connection signal="saida_alterada" from="potenciometros/pot_corrente2" to="display" method="_on_pot_corrente_2_saida_alterada"]
+[connection signal="alteracao_feita" from="hitboxes" to="." method="_on_hitboxes_alteracao_feita"]
+[connection signal="id_pressed" from="popup_comum" to="hitboxes" method="_on_popup_comum_id_pressed"]
+[connection signal="popup_hide" from="popup_comum" to="hitboxes" method="_on_popup_comum_popup_hide"]

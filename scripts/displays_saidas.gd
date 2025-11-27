@@ -134,6 +134,8 @@ func indep_percorre(atual, origem) -> void:
 		indep_percorre(vizinho, atual)
 
 func indep_construir_grafo_e_tensoes(v1, v2) -> void:
+	grafo = {}
+	
 	grafo = {
 		[INDEP_PONTO_C, INDEP_PONTO_A]: v1,
 		[INDEP_PONTO_D, INDEP_PONTO_B]: v2,
@@ -248,7 +250,7 @@ func modo_indep() -> void:
 	
 	var v_pos_5v = V_indep[INDEP_POS_5V]
 	var v_neg_5v = V_indep[INDEP_NEG_5V]
-	var valores = [vb, vc, va, vd, v_pos_5v, v_neg_5v]
+	var valores = [va, vc, vb, vd, v_pos_5v, v_neg_5v]
 	
 	escrever_labels(valores)
 	
