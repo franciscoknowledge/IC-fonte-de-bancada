@@ -29,10 +29,10 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var fontes_com_curto = hitboxes.get_fontes_em_curto()
 	
-	var fonte1_em_curto = (fontes_com_curto.has(enums.FONTES.FONTE_1))
-	var fonte2_em_curto = (fontes_com_curto.has(enums.FONTES.FONTE_2))
+	var fonte1_em_curto = (fontes_com_curto.has(EnumsGlobal.FONTES.FONTE_1))
+	var fonte2_em_curto = (fontes_com_curto.has(EnumsGlobal.FONTES.FONTE_2))
 	
-	var modo_indep = (seletora.estado == enums.ESTADOS_FONTE.INDEP)
+	var modo_indep = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP)
 	
 	var valor_voltagem1 = 0
 	var valor_voltagem2 = 0
@@ -50,11 +50,11 @@ func _process(_delta: float) -> void:
 	else:
 		valor_voltagem2 = pot_voltagem2.saida
 		
-	if potenciometros.get_fonte_zerada(enums.FONTES.FONTE_1):
+	if potenciometros.get_fonte_zerada(EnumsGlobal.FONTES.FONTE_1):
 		valor_voltagem1 = 0
 		valor_corrente1 = 0
 		
-	if potenciometros.get_fonte_zerada(enums.FONTES.FONTE_2):
+	if potenciometros.get_fonte_zerada(EnumsGlobal.FONTES.FONTE_2):
 		valor_voltagem2 = 0
 		valor_corrente2 = 0
 		

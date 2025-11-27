@@ -3,6 +3,8 @@ extends Node
 const COR_OFF = Color(0.2, 1, 1, 1)
 const COR_ON = Color(1, 1, 1, 1)
 
+@onready var root = $".."
+
 @onready var luz_voltagem_1 = $voltagem1
 @onready var luz_corrente_1 = $corrente1
 @onready var luz_voltagem_2 = $voltagem2
@@ -18,13 +20,13 @@ const COR_ON = Color(1, 1, 1, 1)
 @onready var pot_corrente_2 = $"../potenciometros/pot_corrente2"
 
 @onready var fonte_para_potenciometro = {
-	enums.FONTES.FONTE_1: pot_corrente_1,
-	enums.FONTES.FONTE_2: pot_corrente_2,
+	EnumsGlobal.FONTES.FONTE_1: pot_corrente_1,
+	EnumsGlobal.FONTES.FONTE_2: pot_corrente_2,
 }
 
 @onready var fonte_para_luzes = {
-	enums.FONTES.FONTE_1: [luz_voltagem_1, luz_corrente_1],
-	enums.FONTES.FONTE_2: [luz_voltagem_2, luz_corrente_2],
+	EnumsGlobal.FONTES.FONTE_1: [luz_voltagem_1, luz_corrente_1],
+	EnumsGlobal.FONTES.FONTE_2: [luz_voltagem_2, luz_corrente_2],
 }
 
 @onready var luz_para_tween = {
@@ -34,13 +36,11 @@ const COR_ON = Color(1, 1, 1, 1)
 	luz_corrente_2: null,
 }
 
-var fonte_ligada = false
-
 func get_modulate(valor: bool) -> Color:
 	if valor: return COR_ON
 	return COR_OFF
 	
-func ligar_luzes(fonte: enums.FONTES, ligar_voltagem: bool, ligar_corrente: bool) -> void:
+func ligar_luzes(fonte: EnumsGlobal.FONTES, ligar_voltagem: bool, ligar_corrente: bool) -> void:
 	var luzes = fonte_para_luzes[fonte]
 	var luz_voltagem = luzes[0]
 	var luz_corrente = luzes[1]
@@ -64,8 +64,8 @@ func ligar_luzes(fonte: enums.FONTES, ligar_voltagem: bool, ligar_corrente: bool
 	#luz_voltagem.visible = ligar_voltagem
 	#luz_corrente.visible = ligar_corrente
 
-func verificar_fonte(fonte: enums.FONTES) -> void:
-	if !fonte_ligada: return
+func verificar_fonte(fonte: EnumsGlobal.FONTES) -> void:
+	if !root.fonte_ligada: return
 	
 	var fontes_em_curto = hitboxes.get_fontes_em_curto()
 	var pot_corrente = fonte_para_potenciometro[fonte]
@@ -84,21 +84,21 @@ func verificar_fonte(fonte: enums.FONTES) -> void:
 	ligar_luzes(fonte, ligar_luz_voltagem, ligar_luz_corrente)
 
 func verificar_ambas_fontes() -> void:
-	verificar_fonte(enums.FONTES.FONTE_1)
-	verificar_fonte(enums.FONTES.FONTE_2)
+	verificar_fonte(EnumsGlobal.FONTES.FONTE_1)
+	verificar_fonte(EnumsGlobal.FONTES.FONTE_2)
 
 func _ready() -> void:
 	for luz: Sprite2D in [luz_voltagem_1, luz_corrente_1, luz_voltagem_2, luz_corrente_2]:
 		luz.modulate = COR_OFF
 
 func _on_fonte_update() -> void:
+	if !root.fonte_ligada: return
 	verificar_ambas_fontes()
 
 func _on_botao_on_off_toggled(toggled_on: bool) -> void:
-	fonte_ligada = toggled_on
 	if toggled_on:
 		verificar_ambas_fontes()
 		return
 	
-	ligar_luzes(enums.FONTES.FONTE_1, toggled_on, toggled_on)
-	ligar_luzes(enums.FONTES.FONTE_2, toggled_on, toggled_on)
+	ligar_luzes(EnumsGlobal.FONTES.FONTE_1, toggled_on, toggled_on)
+	ligar_luzes(EnumsGlobal.FONTES.FONTE_2, toggled_on, toggled_on)

@@ -3,6 +3,7 @@ extends Node
 const COR_OFF = Color(0.2, 1, 1, 1)
 const COR_ON = Color(1, 1, 1, 1)
 
+@onready var root = $".."
 @onready var seletora = $"../chave_seletora"
 @onready var luz_indep = $luz_indep
 @onready var luz_series = $luz_series
@@ -10,13 +11,13 @@ const COR_ON = Color(1, 1, 1, 1)
 @onready var linha: Line2D = $linha
 
 @onready var estado_para_luz = {
-	enums.ESTADOS_FONTE.SERIES: luz_series,
-	enums.ESTADOS_FONTE.PARALELL: luz_paralell,
-	enums.ESTADOS_FONTE.INDEP: luz_indep,
+	EnumsGlobal.ESTADOS_FONTE.SERIES: luz_series,
+	EnumsGlobal.ESTADOS_FONTE.PARALELL: luz_paralell,
+	EnumsGlobal.ESTADOS_FONTE.INDEP: luz_indep,
 }
 
 var tween: Tween
-var estado_atual: enums.ESTADOS_FONTE
+var estado_atual: EnumsGlobal.ESTADOS_FONTE
 
 func _ready() -> void:
 	for luz: Sprite2D in [luz_indep, luz_series, luz_paralell]:
@@ -26,11 +27,13 @@ func _ready() -> void:
 	estado_atual = seletora.estado
 	tween_luz(null, estado_para_luz[estado_atual])
 
-func _on_chave_seletora_estado_alterado(novo_estado: enums.ESTADOS_FONTE, estado_anterior: enums.ESTADOS_FONTE) -> void:
+func _on_chave_seletora_estado_alterado(novo_estado: EnumsGlobal.ESTADOS_FONTE, estado_anterior: EnumsGlobal.ESTADOS_FONTE) -> void:
 	var ativar = estado_para_luz[novo_estado]
 	var desligar = estado_para_luz[estado_anterior]
 	estado_atual = seletora.estado
-	tween_luz(ativar, desligar)
+	
+	if root.fonte_ligada:
+		tween_luz(ativar, desligar)
 	
 func _on_botao_on_off_toggled(toggled_on: bool) -> void:
 	var luz = estado_para_luz[estado_atual]

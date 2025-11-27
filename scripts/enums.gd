@@ -1,5 +1,5 @@
 extends Node
-class_name enums
+class_name EnumsGlobal
 
 enum ESTADOS_FONTE {
 	SERIES = 1,

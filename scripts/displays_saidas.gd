@@ -13,18 +13,18 @@ const COR_DISPLAY_ERRO = Color("fccd00ff")
 @onready var seletora = $"../chave_seletora"
 @onready var botao = $"../botao_on_off"
 
-const SP_PONTO_A = enums.SAIDAS.POS_2
-const SP_PONTO_B = enums.SAIDAS.POS_1
-const SP_PONTO_C = enums.SAIDAS.NEG_1
-const SP_PONTO_D = enums.SAIDAS.NEG_2
+const SP_PONTO_A = EnumsGlobal.SAIDAS.POS_2
+const SP_PONTO_B = EnumsGlobal.SAIDAS.POS_1
+const SP_PONTO_C = EnumsGlobal.SAIDAS.NEG_1
+const SP_PONTO_D = EnumsGlobal.SAIDAS.NEG_2
 
-const INDEP_PONTO_A = enums.SAIDAS.POS_1
-const INDEP_PONTO_B = enums.SAIDAS.POS_2
-const INDEP_PONTO_C = enums.SAIDAS.NEG_1
-const INDEP_PONTO_D = enums.SAIDAS.NEG_2
+const INDEP_PONTO_A = EnumsGlobal.SAIDAS.POS_1
+const INDEP_PONTO_B = EnumsGlobal.SAIDAS.POS_2
+const INDEP_PONTO_C = EnumsGlobal.SAIDAS.NEG_1
+const INDEP_PONTO_D = EnumsGlobal.SAIDAS.NEG_2
 
-const INDEP_POS_5V = enums.SAIDAS.POS_5V
-const INDEP_NEG_5V = enums.SAIDAS.NEG_5V
+const INDEP_POS_5V = EnumsGlobal.SAIDAS.POS_5V
+const INDEP_NEG_5V = EnumsGlobal.SAIDAS.NEG_5V
 
 @onready var d1: Label = $d1
 @onready var d3: Label = $d3
@@ -58,6 +58,7 @@ var ciclo_detectado = false:
 func _ready() -> void:
 	for label: Label in labels:
 		label.set_meta("cor_inicial", label.get_theme_color("font_outline_color"))
+		label.visible = false
 
 func _on_fonte_update() -> void:
 	calcular_potenciais()
@@ -101,7 +102,7 @@ func indep_recebe_tensao_origem_destino(origem, destino) -> Variant:
 		if key == [origem, destino]:
 			return grafo[key]
 			
-	print("Não achei a aresta (%s, %s) no grafo." % [origem, destino])
+	print("[modo indep]: Não achei a aresta (%s, %s) no grafo." % [origem, destino])
 	return null
 			
 func indep_recebe_vizinhos(no) -> Array:
@@ -111,12 +112,12 @@ func indep_recebe_vizinhos(no) -> Array:
 			vizinhos.append(key[1])
 			
 	if vizinhos.is_empty():
-		print("O nó %s não tem vizinhos" % no)
+		print("[modo indep]: O nó %s não tem vizinhos" % no)
 	return vizinhos
 	
 func indep_percorre(atual, origem) -> void:
 	if atual in visitados:
-		print("ciclo no nó %s" % atual)
+		print("[modo indep]: ciclo no nó %s" % atual)
 		ciclo_detectado = true
 		return
 		
@@ -183,11 +184,16 @@ func modo_serie_paralelo() -> void:
 	}
 	
 	var potenciais: Dictionary
-	if seletora.estado == enums.ESTADOS_FONTE.SERIES:
+	if seletora.estado == EnumsGlobal.ESTADOS_FONTE.SERIES:
 		potenciais = potenciais_serie
 	else:
 		potenciais = potenciais_paralelo
-		
+	
+	if !potenciais.has(ponto_comum):
+		var key = utils.get_enum_key(EnumsGlobal.SAIDAS, ponto_comum)
+		print("[modo serie / paralelo]: o ponto_comum [%s (%d)] não existe em potenciais" % [key, ponto_comum])
+		return
+	
 	var tensao_comum = potenciais[ponto_comum]
 	var va = potenciais[SP_PONTO_A] - tensao_comum
 	var vb = potenciais[SP_PONTO_B] - tensao_comum
@@ -250,7 +256,7 @@ func calcular_potenciais() -> void:
 	if !(botao.button_pressed):
 		return
 	
-	if (seletora.estado == enums.ESTADOS_FONTE.INDEP):
+	if (seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP):
 		modo_indep()
 	else:
 		modo_serie_paralelo()
@@ -258,10 +264,10 @@ func calcular_potenciais() -> void:
 func checar_fontes_em_zero() -> void:
 	if ciclo_detectado: return
 	
-	if potenciometros.get_fonte_zerada(enums.FONTES.FONTE_1):
+	if potenciometros.get_fonte_zerada(EnumsGlobal.FONTES.FONTE_1):
 		labels[0].text = "%.2f V" % 0
 		labels[1].text = "%.2f V" % 0
 		
-	if potenciometros.get_fonte_zerada(enums.FONTES.FONTE_2):
+	if potenciometros.get_fonte_zerada(EnumsGlobal.FONTES.FONTE_2):
 		labels[2].text = "%.2f V" % 0
 		labels[3].text = "%.2f V" % 0

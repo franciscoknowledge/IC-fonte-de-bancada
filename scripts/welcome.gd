@@ -1,6 +1,8 @@
 extends Node2D
 signal update
 
+@onready var botao_on_off = $botao_on_off
+
 @onready var potenciometros = $potenciometros
 @onready var seletora = $chave_seletora
 @onready var botao = $botao_on_off
@@ -14,6 +16,8 @@ signal update
 
 @onready var pots = [pot_voltagem_1, pot_voltagem_2, pot_corrente_1, pot_corrente_2]
 
+@export var fonte_ligada = false
+
 func _ready() -> void:
 	for pot: PotenciometroClick in pots:
 		pot.saida_alterada.connect(emitir_update_pot)
@@ -21,9 +25,10 @@ func _ready() -> void:
 func _on_chave_seletora_estado_alterado(_novo_estado: Variant, _estado_anterior: Variant) -> void:
 	emitir_update()
 
-func _on_botao_on_off_toggled(_toggled_on: bool) -> void:
+func _on_botao_on_off_toggled(toggled_on: bool) -> void:
+	fonte_ligada = toggled_on
 	emitir_update()
-	
+
 func _on_hitboxes_alteracao_feita() -> void:
 	emitir_update()
 

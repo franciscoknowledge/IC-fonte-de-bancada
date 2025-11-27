@@ -4,19 +4,21 @@ class_name ChaveSeletora
 signal estado_alterado(novo_estado, estado_anterior)
 
 const rotacoes = {
-	enums.ESTADOS_FONTE.SERIES: deg_to_rad(60),
-	enums.ESTADOS_FONTE.INDEP: deg_to_rad(90),
-	enums.ESTADOS_FONTE.PARALELL: deg_to_rad(120),
+	EnumsGlobal.ESTADOS_FONTE.SERIES: deg_to_rad(60),
+	EnumsGlobal.ESTADOS_FONTE.INDEP: deg_to_rad(90),
+	EnumsGlobal.ESTADOS_FONTE.PARALELL: deg_to_rad(120),
 }
 
-@export var estado = enums.ESTADOS_FONTE.INDEP
+@onready var root = $".."
+
+@export var estado = EnumsGlobal.ESTADOS_FONTE.INDEP
 
 var tween: Tween
 
 func _ready() -> void:
 	rotation = rotacoes[estado]
 
-func _pressed() -> void:
+func _pressed() -> void:	
 	var anterior = estado
 	estado = estado + 1
 	estado = wrapi(estado, 1, 4)

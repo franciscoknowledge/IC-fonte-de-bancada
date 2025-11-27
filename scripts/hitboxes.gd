@@ -43,39 +43,39 @@ enum IDS_POPUP {
 @onready var popup_comum = $"../popup_comum"
 @onready var seletora = $"../chave_seletora"
 @onready var sprites_comuns = {
-	enums.SAIDAS.POS_1: $"../comuns/c1",
-	enums.SAIDAS.GND_1: $"../comuns/c2",
-	enums.SAIDAS.NEG_1: $"../comuns/c3",
+	EnumsGlobal.SAIDAS.POS_1: $"../comuns/c1",
+	EnumsGlobal.SAIDAS.GND_1: $"../comuns/c2",
+	EnumsGlobal.SAIDAS.NEG_1: $"../comuns/c3",
 	
-	enums.SAIDAS.POS_2: $"../comuns/c4",
-	enums.SAIDAS.GND_2: $"../comuns/c5",
-	enums.SAIDAS.NEG_2: $"../comuns/c6",
+	EnumsGlobal.SAIDAS.POS_2: $"../comuns/c4",
+	EnumsGlobal.SAIDAS.GND_2: $"../comuns/c5",
+	EnumsGlobal.SAIDAS.NEG_2: $"../comuns/c6",
 	
-	enums.SAIDAS.POS_5V: $"../comuns/c7",
-	enums.SAIDAS.NEG_5V: $"../comuns/c8",
+	EnumsGlobal.SAIDAS.POS_5V: $"../comuns/c7",
+	EnumsGlobal.SAIDAS.NEG_5V: $"../comuns/c8",
 }
 
 @onready var sprites_curtos = {
-	enums.SAIDAS.POS_1: $"../curtos/c1",
-	enums.SAIDAS.GND_1: $"../curtos/c1",
-	enums.SAIDAS.NEG_1: $"../curtos/c1",
+	EnumsGlobal.SAIDAS.POS_1: $"../curtos/c1",
+	EnumsGlobal.SAIDAS.GND_1: $"../curtos/c1",
+	EnumsGlobal.SAIDAS.NEG_1: $"../curtos/c1",
 	
-	enums.SAIDAS.POS_2: $"../curtos/c2",
-	enums.SAIDAS.GND_2: $"../curtos/c2",
-	enums.SAIDAS.NEG_2: $"../curtos/c2",
+	EnumsGlobal.SAIDAS.POS_2: $"../curtos/c2",
+	EnumsGlobal.SAIDAS.GND_2: $"../curtos/c2",
+	EnumsGlobal.SAIDAS.NEG_2: $"../curtos/c2",
 }
 
 @onready var saida_para_hitbox = {
-	enums.SAIDAS.POS_1: $hitbox_saida1,
-	enums.SAIDAS.GND_1: $hitbox_saida2,
-	enums.SAIDAS.NEG_1: $hitbox_saida3,
+	EnumsGlobal.SAIDAS.POS_1: $hitbox_saida1,
+	EnumsGlobal.SAIDAS.GND_1: $hitbox_saida2,
+	EnumsGlobal.SAIDAS.NEG_1: $hitbox_saida3,
 	
-	enums.SAIDAS.POS_2: $hitbox_saida4,
-	enums.SAIDAS.GND_2: $hitbox_saida5,
-	enums.SAIDAS.NEG_2: $hitbox_saida6,
+	EnumsGlobal.SAIDAS.POS_2: $hitbox_saida4,
+	EnumsGlobal.SAIDAS.GND_2: $hitbox_saida5,
+	EnumsGlobal.SAIDAS.NEG_2: $hitbox_saida6,
 	
-	enums.SAIDAS.POS_5V: $hitbox_saida7,
-	enums.SAIDAS.NEG_5V: $hitbox_saida8,
+	EnumsGlobal.SAIDAS.POS_5V: $hitbox_saida7,
+	EnumsGlobal.SAIDAS.NEG_5V: $hitbox_saida8,
 }
 
 @export var comuns_numeros_ativos = []
@@ -143,14 +143,14 @@ func _on_popup_comum_id_pressed(id: int) -> void:
 	limitar_comuns()
 
 func _on_chave_seletora_estado_alterado(novo_estado: Variant, _estado_anterior: Variant) -> void:
-	if (novo_estado != enums.ESTADOS_FONTE.INDEP):
+	if (novo_estado != EnumsGlobal.ESTADOS_FONTE.INDEP):
 		destruir_todos_fios()
 		quantidade_de_comuns = 1
 	else:
 		quantidade_de_comuns = 2
 		
-	for comum: enums.SAIDAS in comuns_numeros_ativos.duplicate():
-		if enums.SAIDA_PARA_FONTE[comum] == enums.FONTES.FONTE_5V:
+	for comum: EnumsGlobal.SAIDAS in comuns_numeros_ativos.duplicate():
+		if EnumsGlobal.SAIDA_PARA_FONTE[comum] == EnumsGlobal.FONTES.FONTE_5V:
 			remover_comum(comum)
 	
 	alteracao_feita.emit()
@@ -172,10 +172,10 @@ func abrir_popup_para_saida(saida: int, hitbox: HitboxSaida) -> void:
 	saida_selecionada = saida
 	hitbox_selecionada = hitbox
 	
-	var fonte = enums.SAIDA_PARA_FONTE[saida]
+	var fonte = EnumsGlobal.SAIDA_PARA_FONTE[saida]
 	var fonte_possui_comum = fonte in fontes_com_comum
 	var fonte_possui_curto = fonte in fontes_em_curto
-	var e_fonte_5v = (fonte == enums.FONTES.FONTE_5V)
+	var e_fonte_5v = (fonte == EnumsGlobal.FONTES.FONTE_5V)
 	
 	var comum_presente
 	
@@ -198,14 +198,16 @@ func abrir_popup_para_saida(saida: int, hitbox: HitboxSaida) -> void:
 		if (fio_resultante[0] == fio_resultante[1]):
 			fio_redundante = true
 			
-	for comum: enums.SAIDAS in comuns_numeros_ativos:
-		if enums.SAIDA_PARA_FONTE[comum] == fonte:
+	for comum: EnumsGlobal.SAIDAS in comuns_numeros_ativos:
+		if EnumsGlobal.SAIDA_PARA_FONTE[comum] == fonte:
 			comum_presente = comum
 			break
 	
-	var pode_definir_comum = (!fonte_possui_comum) and (!fonte_possui_curto) and ((not e_fonte_5v) or seletora.estado == enums.ESTADOS_FONTE.INDEP)
+	var pode_definir_comum = (!fonte_possui_comum) and ((not e_fonte_5v) or seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP)
+	
+	#var pode_definir_comum = (!fonte_possui_comum) and (!fonte_possui_curto) and ((not e_fonte_5v) or seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP)
 	#var pode_definir_curto = (!fonte_possui_comum) and (!fonte_possui_curto)
-	var pode_definir_fios = (seletora.estado == enums.ESTADOS_FONTE.INDEP) and (fios_na_fonte.size() <= LIMITE_FIOS)
+	var pode_definir_fios = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP) and (fios_na_fonte.size() <= LIMITE_FIOS)
 	
 	if selecao_possui_comum:
 		popup_comum.add_item("Remover ponto comum", IDS_POPUP.REMOVER_COMUM)
@@ -284,7 +286,7 @@ func fazer_tween_sprite(sprite: Sprite2D, ativar: bool) -> void:
 # comuns
 func definir_comum(saida: int) -> void:
 	var sprite = sprites_comuns[saida]
-	var fonte = enums.SAIDA_PARA_FONTE[saida]
+	var fonte = EnumsGlobal.SAIDA_PARA_FONTE[saida]
 	if !(fonte in fontes_com_comum):
 		fontes_com_comum.append(fonte)
 	
@@ -298,7 +300,7 @@ func definir_comum(saida: int) -> void:
 	
 func remover_comum(saida: int) -> void:
 	var sprite = sprites_comuns[saida]
-	var fonte = enums.SAIDA_PARA_FONTE[saida]
+	var fonte = EnumsGlobal.SAIDA_PARA_FONTE[saida]
 	
 	if !(sprite in sprites_ativos):
 		return
@@ -477,19 +479,19 @@ func get_comuns() -> Array:
 	
 func get_comuns_5v() -> Array:
 	var comuns_5v = []
-	if enums.SAIDAS.POS_5V in comuns_numeros_ativos:
-		comuns_5v.append(enums.SAIDAS.POS_5V)
+	if EnumsGlobal.SAIDAS.POS_5V in comuns_numeros_ativos:
+		comuns_5v.append(EnumsGlobal.SAIDAS.POS_5V)
 	
-	if enums.SAIDAS.NEG_5V in comuns_numeros_ativos:
-		comuns_5v.append(enums.SAIDAS.NEG_5V)
+	if EnumsGlobal.SAIDAS.NEG_5V in comuns_numeros_ativos:
+		comuns_5v.append(EnumsGlobal.SAIDAS.NEG_5V)
 	
 	return comuns_5v
 
 func get_fontes_com_comum() -> Array:
 	var fontes_comum = []
 	
-	for saida: enums.SAIDAS in comuns_numeros_ativos:
-		var fonte = enums.SAIDA_PARA_FONTE.get(saida, null)
+	for saida: EnumsGlobal.SAIDAS in comuns_numeros_ativos:
+		var fonte = EnumsGlobal.SAIDA_PARA_FONTE.get(saida, null)
 		
 		if fonte != null and fonte not in fontes_comum:
 			fontes_comum.append(fonte)
@@ -505,12 +507,12 @@ func get_fontes_em_curto() -> Array:
 		return fontes_em_curto
 	
 	for fio in fios_na_fonte:
-		if fio == [enums.SAIDAS.POS_1, enums.SAIDAS.NEG_1]:
-			fontes_em_curto.append(enums.FONTES.FONTE_1)
+		if fio == [EnumsGlobal.SAIDAS.POS_1, EnumsGlobal.SAIDAS.NEG_1]:
+			fontes_em_curto.append(EnumsGlobal.FONTES.FONTE_1)
 			continue
 			
-		if fio == [enums.SAIDAS.POS_2, enums.SAIDAS.NEG_2]:
-			fontes_em_curto.append(enums.FONTES.FONTE_2)
+		if fio == [EnumsGlobal.SAIDAS.POS_2, EnumsGlobal.SAIDAS.NEG_2]:
+			fontes_em_curto.append(EnumsGlobal.FONTES.FONTE_2)
 			continue
 			
 	return fontes_em_curto
@@ -525,7 +527,7 @@ func get_possui_fontes_interconectadas() -> bool:
 	for fio in fios_na_fonte:
 		var ponto_1 = fio[0]
 		var ponto_2 = fio[1]
-		if enums.SAIDA_PARA_FONTE[ponto_1] != enums.SAIDA_PARA_FONTE[ponto_2]:
+		if EnumsGlobal.SAIDA_PARA_FONTE[ponto_1] != EnumsGlobal.SAIDA_PARA_FONTE[ponto_2]:
 			return true
 			
 	return false

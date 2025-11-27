@@ -26,7 +26,7 @@ func redimensionar_hitbox_horizontal(collision_shape: CollisionShape2D, ponto_1:
 	shape.extents = Vector2(w / 2, ALTURA_HITBOX)
 	
 func redimensionar_hitbox_vertical(collision_shape: CollisionShape2D, ponto_1: Vector2, ponto_2: Vector2) -> void:
-	var h = abs(ponto_1.y - ponto_2.y)
+	var h = abs(ponto_1.y - ponto_2.y) / 1.7
 	var pos_y = (ponto_1.y + ponto_2.y) / 2
 	
 	var shape = collision_shape.shape
@@ -37,7 +37,7 @@ func redimensionar_hitbox_vertical(collision_shape: CollisionShape2D, ponto_1: V
 # tem q ter a hitbox entre 1 e 2
 func redimensionar_hitboxes() -> void:
 	if points.size() < 4:
-		print("o fio não possui a quantidade de pontos necessarios (%d/4)" % points.size())
+		print("[FioFisico]: o fio não possui a quantidade de pontos necessarios (%d/4)" % points.size())
 		return
 		
 	#var area_2d_horizontal = $hitbox_horizontal
