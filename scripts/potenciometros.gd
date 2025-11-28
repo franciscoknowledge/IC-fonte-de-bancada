@@ -107,6 +107,9 @@ func definir_saida(potenciometro: PotenciometroClick) -> void:
 
 func get_potenciometro_em_zero(potenciometro: PotenciometroClick) -> bool:
 	return (potenciometro.saida < VALOR_REFERENCIA_ZERO)
+	
+func get_potenciometro_em_zero_rotacao(potenciometro: PotenciometroClick) -> bool:
+	return (get_saida(potenciometro) < VALOR_REFERENCIA_ZERO)
 
 func get_fonte_zerada(fonte: EnumsGlobal.FONTES) -> bool:
 	var potenciometros = []

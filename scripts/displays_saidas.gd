@@ -10,6 +10,7 @@ const COR_DISPLAY_ERRO = Color("fccd00ff")
 @onready var potenciometros = $"../potenciometros"
 @onready var pot_voltagem1 = $"../potenciometros/pot_voltagem1"
 @onready var pot_voltagem2 = $"../potenciometros/pot_voltagem2"
+@onready var pot_corrente1 = $"../potenciometros/pot_corrente1"
 @onready var seletora = $"../chave_seletora"
 @onready var botao = $"../botao_on_off"
 
@@ -62,7 +63,7 @@ func _ready() -> void:
 
 func _on_fonte_update() -> void:
 	calcular_potenciais()
-	checar_fontes_em_zero()
+	#checar_fontes_em_zero()
 	colorir_labels()
 
 func _on_botao_on_off_toggled(toggled_on: bool) -> void:
@@ -164,11 +165,12 @@ func indep_limpar_variaveis() -> void:
 
 func modo_serie_paralelo() -> void:
 	ciclo_detectado = false
+	var corrente_1_em_zero = potenciometros.get_potenciometro_em_zero_rotacao(pot_corrente1)
 	
 	var v1 = pot_voltagem2.saida
 	var v2 = pot_voltagem2.saida
 	
-	if pot_voltagem1.saida == 0:
+	if corrente_1_em_zero and seletora.estado == EnumsGlobal.ESTADOS_FONTE.SERIES:
 		v1 = 0
 	
 	var ponto_comum = get_primeiro_comum()
@@ -251,6 +253,24 @@ func modo_indep() -> void:
 	var vc = V_indep[INDEP_PONTO_C]
 	var vb = V_indep[INDEP_PONTO_B]
 	var vd = V_indep[INDEP_PONTO_D]
+	
+	#@onready var d1: Label = $d1
+	#@onready var d3: Label = $d3
+	#@onready var d4: Label = $d4
+	#@onready var d6: Label = $d6
+	#
+	#@onready var d7: Label = $d7
+	#@onready var d8: Label = $d8
+	
+	#const INDEP_PONTO_A = EnumsGlobal.SAIDAS.POS_1
+	#const INDEP_PONTO_B = EnumsGlobal.SAIDAS.POS_2
+	#const INDEP_PONTO_C = EnumsGlobal.SAIDAS.NEG_1
+	#const INDEP_PONTO_D = EnumsGlobal.SAIDAS.NEG_2
+	
+	#ponto_a -> pos_1 -> d1
+	#ponto_b -> pos_2 -> d4
+	#ponto_c -> neg_1 -> d3
+	#ponto_d -> neg_2 -> d6
 	
 	var v_pos_5v = V_indep[INDEP_POS_5V]
 	var v_neg_5v = V_indep[INDEP_NEG_5V]

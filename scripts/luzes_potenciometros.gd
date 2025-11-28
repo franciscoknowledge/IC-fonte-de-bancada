@@ -19,9 +19,9 @@ const COR_ON = Color(1, 1, 1, 1)
 @onready var pot_corrente_1 = $"../potenciometros/pot_corrente1"
 @onready var pot_corrente_2 = $"../potenciometros/pot_corrente2"
 
-@onready var fonte_para_potenciometro = {
-	EnumsGlobal.FONTES.FONTE_1: pot_corrente_1,
-	EnumsGlobal.FONTES.FONTE_2: pot_corrente_2,
+@onready var fonte_para_potenciometros = {
+	EnumsGlobal.FONTES.FONTE_1: [pot_voltagem_1, pot_corrente_1],
+	EnumsGlobal.FONTES.FONTE_2: [pot_voltagem_2, pot_corrente_2],
 }
 
 @onready var fonte_para_luzes = {
@@ -68,18 +68,20 @@ func verificar_fonte(fonte: EnumsGlobal.FONTES) -> void:
 	if !root.fonte_ligada: return
 	
 	var fontes_em_curto = hitboxes.get_fontes_em_curto()
-	var pot_corrente = fonte_para_potenciometro[fonte]
+	var pot_voltagem = fonte_para_potenciometros[fonte][0]
+	var pot_corrente = fonte_para_potenciometros[fonte][1]
 	
 	var fonte_esta_em_curto = (fontes_em_curto.has(fonte))
-	var tensao_e_zero = (potenciometros.get_potenciometro_em_zero(pot_corrente))
+	var corrente_e_zero = (potenciometros.get_potenciometro_em_zero_rotacao(pot_corrente))
+	var tensao_e_zero = (potenciometros.get_potenciometro_em_zero_rotacao(pot_voltagem))
 	
 	var ligar_luz_voltagem = false
 	var ligar_luz_corrente = false
 	
-	if fonte_esta_em_curto or tensao_e_zero:
-		ligar_luz_corrente = true
-	else:
+	if !(fonte_esta_em_curto or corrente_e_zero): #and !tensao_e_zero:
 		ligar_luz_voltagem = true
+	else:
+		ligar_luz_corrente = true
 		
 	ligar_luzes(fonte, ligar_luz_voltagem, ligar_luz_corrente)
 

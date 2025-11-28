@@ -27,12 +27,17 @@ func _ready() -> void:
 	display_corrente2.modulate = COR_OFF
 	
 func _process(_delta: float) -> void:
+	var potenciometro_corrente_1_esta_zerado = potenciometros.get_potenciometro_em_zero_rotacao(pot_corrente1)
+	var potenciometro_corrente_2_esta_zerado = potenciometros.get_potenciometro_em_zero_rotacao(pot_corrente2)
+	
 	var fontes_com_curto = hitboxes.get_fontes_em_curto()
 	
 	var fonte1_em_curto = (fontes_com_curto.has(EnumsGlobal.FONTES.FONTE_1))
 	var fonte2_em_curto = (fontes_com_curto.has(EnumsGlobal.FONTES.FONTE_2))
 	
 	var modo_indep = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP)
+	var modo_serie = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.SERIES)
+	var modo_paralelo = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.PARALELL)
 	
 	var valor_voltagem1 = 0
 	var valor_voltagem2 = 0
@@ -50,16 +55,35 @@ func _process(_delta: float) -> void:
 	else:
 		valor_voltagem2 = pot_voltagem2.saida
 		
-	if potenciometros.get_fonte_zerada(EnumsGlobal.FONTES.FONTE_1):
-		valor_voltagem1 = 0
-		valor_corrente1 = 0
-		
-	if potenciometros.get_fonte_zerada(EnumsGlobal.FONTES.FONTE_2):
-		valor_voltagem2 = 0
-		valor_corrente2 = 0
-		
+	#if !modo_indep:
+	#	if potenciometro_corrente_2_esta_zerado:
+	#		valor_voltagem2 = 0
+	#	else:
+	#		valor_voltagem1 = valor_voltagem2
+	#		
+	#	if modo_serie and potenciometro_corrente_1_esta_zerado:
+	#		valor_voltagem1 = 0
+	#	else:
+	#		valor_voltagem1 = valor_voltagem2
+	
 	if !modo_indep:
 		valor_voltagem1 = valor_voltagem2
+			
+	if modo_serie and potenciometro_corrente_1_esta_zerado:
+		valor_voltagem1 = 0
+		
+	#if !modo_indep:
+	#	valor_voltagem1 = valor_voltagem2
+	#	if potenciometro_corrente_1_esta_zerado:
+	#		valor_voltagem1 = 0
+		
+	#if potenciometros.get_fonte_zerada(EnumsGlobal.FONTES.FONTE_1):
+	#	valor_voltagem1 = 0
+	#	valor_corrente1 = 0
+		
+	#if potenciometros.get_fonte_zerada(EnumsGlobal.FONTES.FONTE_2):
+	#	valor_voltagem2 = 0
+	#	valor_corrente2 = 0
 	
 	display_voltagem1.text = "%05.2f" % valor_voltagem1
 	display_corrente1.text = "%05.2f" % valor_corrente1
