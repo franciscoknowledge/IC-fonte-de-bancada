@@ -17,7 +17,7 @@ const COR_ON = Color(1, 1, 1, 1)
 }
 
 var tween: Tween
-var estado_atual: EnumsGlobal.ESTADOS_FONTE
+var estado_atual: EnumsGlobal.ESTADOS_FONTE = EnumsGlobal.ESTADOS_FONTE.INDEP
 
 func _ready() -> void:
 	for luz: Sprite2D in [luz_indep, luz_series, luz_paralell]:

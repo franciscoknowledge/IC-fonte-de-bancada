@@ -167,6 +167,10 @@ func modo_serie_paralelo() -> void:
 	
 	var v1 = pot_voltagem2.saida
 	var v2 = pot_voltagem2.saida
+	
+	if pot_voltagem1.saida == 0:
+		v1 = 0
+	
 	var ponto_comum = get_primeiro_comum()
 	if ponto_comum == -1:
 		ponto_comum = SP_PONTO_C

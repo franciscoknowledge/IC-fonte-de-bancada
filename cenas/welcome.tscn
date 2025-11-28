@@ -32,20 +32,20 @@ script = ExtResource("1_gkxuq")
 metadata/_edit_lock_ = true
 
 [node name="fundo" type="Sprite2D" parent="."]
-position = Vector2(672, 337)
+position = Vector2(672, 324)
 texture = ExtResource("1_5134n")
 
 [node name="chave_seletora" parent="." instance=ExtResource("2_cnejx")]
 offset_left = 624.0
-offset_top = 392.0
+offset_top = 379.0
 offset_right = 719.0
-offset_bottom = 487.0
+offset_bottom = 474.0
 
 [node name="botao_on_off" type="TextureButton" parent="."]
 offset_left = 166.0
-offset_top = 540.0
+offset_top = 527.0
 offset_right = 347.0
-offset_bottom = 615.0
+offset_bottom = 602.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 toggle_mode = true
@@ -66,54 +66,54 @@ position = Vector2(-115, 104)
 texture = ExtResource("7_u3g5k")
 
 [node name="potenciometro_rotacao" parent="potenciometros" instance=ExtResource("10_o6v8g")]
-position = Vector2(1439, 502)
+position = Vector2(1439, 489)
 
 [node name="pot_voltagem1" parent="potenciometros" instance=ExtResource("4_t7un0")]
 offset_left = 366.0
-offset_top = 345.0
+offset_top = 332.0
 offset_right = 514.0
-offset_bottom = 493.0
+offset_bottom = 480.0
 VALOR_MAXIMO = 30.0
 
 [node name="pot_voltagem2" parent="potenciometros" instance=ExtResource("4_t7un0")]
 offset_left = 1022.0
-offset_top = 345.0
+offset_top = 332.0
 offset_right = 1170.0
-offset_bottom = 493.0
+offset_bottom = 480.0
 VALOR_MAXIMO = 30.0
 
 [node name="pot_corrente1" parent="potenciometros" instance=ExtResource("4_t7un0")]
 offset_left = 168.0
-offset_top = 345.0
+offset_top = 332.0
 offset_right = 316.0
-offset_bottom = 493.0
+offset_bottom = 480.0
 pivot_offset = Vector2(75, 74)
 VALOR_MAXIMO = 3.0
 
 [node name="pot_corrente2" parent="potenciometros" instance=ExtResource("4_t7un0")]
 offset_left = 840.0
-offset_top = 345.0
+offset_top = 332.0
 offset_right = 988.0
-offset_bottom = 493.0
+offset_bottom = 480.0
 VALOR_MAXIMO = 3.0
 
 [node name="luzes_potenciometros" type="Node" parent="."]
 script = ExtResource("10_se5ov")
 
 [node name="voltagem1" type="Sprite2D" parent="luzes_potenciometros"]
-position = Vector2(537, 287)
+position = Vector2(537, 274)
 texture = ExtResource("6_ucaa7")
 
 [node name="voltagem2" type="Sprite2D" parent="luzes_potenciometros"]
-position = Vector2(1087, 287)
+position = Vector2(1087, 274)
 texture = ExtResource("6_ucaa7")
 
 [node name="corrente1" type="Sprite2D" parent="luzes_potenciometros"]
-position = Vector2(346.5, 287)
+position = Vector2(346.5, 274)
 texture = ExtResource("6_ucaa7")
 
 [node name="corrente2" type="Sprite2D" parent="luzes_potenciometros"]
-position = Vector2(897, 287)
+position = Vector2(897, 274)
 texture = ExtResource("6_ucaa7")
 
 [node name="luzes_chave_seletora" type="Node" parent="."]
@@ -125,15 +125,15 @@ width = 3.0
 default_color = Color(1, 0, 0, 1)
 
 [node name="luz_indep" type="Sprite2D" parent="luzes_chave_seletora"]
-position = Vector2(672, 316)
+position = Vector2(672, 303)
 texture = ExtResource("5_tfot6")
 
 [node name="luz_series" type="Sprite2D" parent="luzes_chave_seletora"]
-position = Vector2(614, 345)
+position = Vector2(614, 332)
 texture = ExtResource("5_tfot6")
 
 [node name="luz_paralell" type="Sprite2D" parent="luzes_chave_seletora"]
-position = Vector2(730, 345)
+position = Vector2(730, 332)
 texture = ExtResource("5_tfot6")
 
 [node name="display" type="Node" parent="."]
@@ -142,9 +142,9 @@ script = ExtResource("12_ucaa7")
 [node name="voltagem1" type="Label" parent="display"]
 modulate = Color(1, 0, 0, 1)
 offset_left = 445.0
-offset_top = 168.0
+offset_top = 155.0
 offset_right = 659.0
-offset_bottom = 268.0
+offset_bottom = 255.0
 theme_override_fonts/font = ExtResource("14_1rfei")
 theme_override_font_sizes/font_size = 50
 text = "00.00"
@@ -153,9 +153,9 @@ metadata/_edit_use_anchors_ = true
 [node name="voltagem2" type="Label" parent="display"]
 modulate = Color(1, 0, 0, 1)
 offset_left = 938.0
-offset_top = 168.0
+offset_top = 155.0
 offset_right = 1152.0
-offset_bottom = 268.0
+offset_bottom = 255.0
 theme_override_fonts/font = ExtResource("14_1rfei")
 theme_override_font_sizes/font_size = 50
 text = "00.00"
@@ -164,9 +164,9 @@ metadata/_edit_use_anchors_ = true
 [node name="corrente1" type="Label" parent="display"]
 modulate = Color(1, 0, 0, 1)
 offset_left = 200.0
-offset_top = 168.0
+offset_top = 155.0
 offset_right = 414.0
-offset_bottom = 268.0
+offset_bottom = 255.0
 theme_override_fonts/font = ExtResource("14_1rfei")
 theme_override_font_sizes/font_size = 50
 text = "00.00"
@@ -175,9 +175,9 @@ metadata/_edit_use_anchors_ = true
 [node name="corrente2" type="Label" parent="display"]
 modulate = Color(1, 0, 0, 1)
 offset_left = 693.0
-offset_top = 168.0
+offset_top = 155.0
 offset_right = 907.0
-offset_bottom = 268.0
+offset_bottom = 255.0
 theme_override_fonts/font = ExtResource("14_1rfei")
 theme_override_font_sizes/font_size = 50
 text = "00.00"
@@ -238,59 +238,59 @@ script = ExtResource("16_6k825")
 
 [node name="hitbox_saida1" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 662.0
-offset_top = 566.0
+offset_top = 553.0
 offset_right = 715.0
-offset_bottom = 618.0
+offset_bottom = 605.0
 
 [node name="hitbox_saida2" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 725.0
-offset_top = 566.0
+offset_top = 553.0
 offset_right = 778.0
-offset_bottom = 618.0
+offset_bottom = 605.0
 disabled = true
 saida = 2
 
 [node name="hitbox_saida3" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 787.0
-offset_top = 566.0
+offset_top = 553.0
 offset_right = 840.0
-offset_bottom = 618.0
+offset_bottom = 605.0
 saida = 3
 
 [node name="hitbox_saida4" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 862.0
-offset_top = 566.0
+offset_top = 553.0
 offset_right = 915.0
-offset_bottom = 618.0
+offset_bottom = 605.0
 saida = 4
 
 [node name="hitbox_saida5" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 925.0
-offset_top = 566.0
+offset_top = 553.0
 offset_right = 978.0
-offset_bottom = 618.0
+offset_bottom = 605.0
 disabled = true
 saida = 5
 
 [node name="hitbox_saida6" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 988.0
-offset_top = 566.0
+offset_top = 553.0
 offset_right = 1041.0
-offset_bottom = 618.0
+offset_bottom = 605.0
 saida = 6
 
 [node name="hitbox_saida7" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 1063.0
-offset_top = 565.0
+offset_top = 552.0
 offset_right = 1116.0
-offset_bottom = 617.0
+offset_bottom = 604.0
 saida = 7
 
 [node name="hitbox_saida8" parent="hitboxes" instance=ExtResource("17_1rfei")]
 offset_left = 1125.0
-offset_top = 565.0
+offset_top = 552.0
 offset_right = 1178.0
-offset_bottom = 617.0
+offset_bottom = 604.0
 saida = 8
 
 [node name="linha_base" type="Line2D" parent="hitboxes"]
@@ -330,9 +330,9 @@ script = ExtResource("19_43vsb")
 [node name="d1" type="Label" parent="displays_saidas"]
 z_index = 3
 offset_left = 644.0
-offset_top = 672.0
+offset_top = 644.0
 offset_right = 714.0
-offset_bottom = 720.0
+offset_bottom = 692.0
 theme_override_colors/font_outline_color = Color(0.3572212, 0.39480397, 0.5216171, 1)
 theme_override_constants/outline_size = 13
 theme_override_font_sizes/font_size = 25
@@ -343,9 +343,9 @@ vertical_alignment = 1
 [node name="d3" type="Label" parent="displays_saidas"]
 z_index = 3
 offset_left = 757.0
-offset_top = 672.0
+offset_top = 644.0
 offset_right = 827.0
-offset_bottom = 720.0
+offset_bottom = 692.0
 theme_override_colors/font_outline_color = Color(0.3572212, 0.39480397, 0.5216171, 1)
 theme_override_constants/outline_size = 13
 theme_override_font_sizes/font_size = 25
@@ -356,9 +356,9 @@ vertical_alignment = 1
 [node name="d4" type="Label" parent="displays_saidas"]
 z_index = 3
 offset_left = 860.0
-offset_top = 672.0
+offset_top = 644.0
 offset_right = 930.0
-offset_bottom = 720.0
+offset_bottom = 692.0
 theme_override_colors/font_outline_color = Color(0.47058824, 0.3372549, 0.54901963, 1)
 theme_override_constants/outline_size = 13
 theme_override_font_sizes/font_size = 25
@@ -369,9 +369,9 @@ vertical_alignment = 1
 [node name="d6" type="Label" parent="displays_saidas"]
 z_index = 3
 offset_left = 974.0
-offset_top = 672.0
+offset_top = 644.0
 offset_right = 1044.0
-offset_bottom = 720.0
+offset_bottom = 692.0
 theme_override_colors/font_outline_color = Color(0.47197264, 0.33790484, 0.54729396, 1)
 theme_override_constants/outline_size = 13
 theme_override_font_sizes/font_size = 25
@@ -382,9 +382,9 @@ vertical_alignment = 1
 [node name="d7" type="Label" parent="displays_saidas"]
 z_index = 3
 offset_left = 1069.0
-offset_top = 672.0
+offset_top = 644.0
 offset_right = 1139.0
-offset_bottom = 720.0
+offset_bottom = 692.0
 theme_override_colors/font_outline_color = Color(0.26482067, 0.29482007, 0.8944741, 1)
 theme_override_constants/outline_size = 13
 theme_override_font_sizes/font_size = 25
@@ -395,9 +395,9 @@ vertical_alignment = 1
 [node name="d8" type="Label" parent="displays_saidas"]
 z_index = 3
 offset_left = 1169.0
-offset_top = 672.0
+offset_top = 644.0
 offset_right = 1239.0
-offset_bottom = 720.0
+offset_bottom = 692.0
 theme_override_colors/font_outline_color = Color(0.26666668, 0.29411766, 0.89411765, 1)
 theme_override_constants/outline_size = 13
 theme_override_font_sizes/font_size = 25

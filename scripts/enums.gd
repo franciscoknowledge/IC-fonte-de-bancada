@@ -1,5 +1,6 @@
 extends Node
 class_name EnumsGlobal
+# isso é um hack? :P
 
 enum ESTADOS_FONTE {
 	SERIES = 1,

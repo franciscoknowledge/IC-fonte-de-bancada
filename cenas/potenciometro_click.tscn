@@ -12,3 +12,9 @@ size_flags_vertical = 8
 toggle_mode = true
 texture_normal = ExtResource("1_vxcwf")
 script = ExtResource("2_18axa")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 149.0
+offset_bottom = 62.0

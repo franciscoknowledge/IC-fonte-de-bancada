@@ -174,7 +174,7 @@ func abrir_popup_para_saida(saida: int, hitbox: HitboxSaida) -> void:
 	
 	var fonte = EnumsGlobal.SAIDA_PARA_FONTE[saida]
 	var fonte_possui_comum = fonte in fontes_com_comum
-	var fonte_possui_curto = fonte in fontes_em_curto
+	#var fonte_possui_curto = fonte in fontes_em_curto
 	var e_fonte_5v = (fonte == EnumsGlobal.FONTES.FONTE_5V)
 	
 	var comum_presente
