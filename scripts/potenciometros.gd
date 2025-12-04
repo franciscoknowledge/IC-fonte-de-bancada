@@ -86,25 +86,6 @@ func definir_saida(potenciometro: PotenciometroClick) -> void:
 		
 	potenciometro.set_saida(saida)
 
-#func definir_saida(potenciometro: PotenciometroClick, rotacao: float) -> void:
-#	var par = pares_pot[potenciometro]
-#	
-#	var valor_saida_max = potenciometro.VALOR_MAXIMO
-#	
-#	var rot_max = pot_rotacao.ANGULO_MAX
-#	var rot_min = pot_rotacao.ANGULO_MIN
-#	
-#	var saida = remap(rotacao, rot_min, rot_max, 0, valor_saida_max)
-#	
-#	if saida < VALOR_REFERENCIA_ZERO or par.saida < VALOR_REFERENCIA_ZERO:
-#		saida = 0
-#	
-#	saida = clamp(saida, 0, valor_saida_max)
-#	saida = floor(saida * 100) / 100
-#	
-#	potenciometro.rotation = rotacao
-#	potenciometro.set_saida(saida)
-
 func get_potenciometro_em_zero(potenciometro: PotenciometroClick) -> bool:
 	return (potenciometro.saida < VALOR_REFERENCIA_ZERO)
 	

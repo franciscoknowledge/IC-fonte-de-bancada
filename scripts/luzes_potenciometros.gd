@@ -60,25 +60,20 @@ func ligar_luzes(fonte: EnumsGlobal.FONTES, ligar_voltagem: bool, ligar_corrente
 	
 	luz_para_tween[luz_voltagem] = tween_voltagem
 	luz_para_tween[luz_corrente] = tween_corrente
-	
-	#luz_voltagem.visible = ligar_voltagem
-	#luz_corrente.visible = ligar_corrente
 
 func verificar_fonte(fonte: EnumsGlobal.FONTES) -> void:
 	if !root.fonte_ligada: return
 	
 	var fontes_em_curto = hitboxes.get_fontes_em_curto()
-	var pot_voltagem = fonte_para_potenciometros[fonte][0]
 	var pot_corrente = fonte_para_potenciometros[fonte][1]
 	
 	var fonte_esta_em_curto = (fontes_em_curto.has(fonte))
 	var corrente_e_zero = (potenciometros.get_potenciometro_em_zero_rotacao(pot_corrente))
-	var tensao_e_zero = (potenciometros.get_potenciometro_em_zero_rotacao(pot_voltagem))
 	
 	var ligar_luz_voltagem = false
 	var ligar_luz_corrente = false
 	
-	if !(fonte_esta_em_curto or corrente_e_zero): #and !tensao_e_zero:
+	if !(fonte_esta_em_curto or corrente_e_zero):
 		ligar_luz_voltagem = true
 	else:
 		ligar_luz_corrente = true

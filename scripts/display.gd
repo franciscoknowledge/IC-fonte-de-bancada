@@ -25,81 +25,55 @@ func _ready() -> void:
 	display_voltagem2.modulate = COR_OFF
 	display_corrente1.modulate = COR_OFF
 	display_corrente2.modulate = COR_OFF
-	
+
+# ruim
 func _process(_delta: float) -> void:
-	var potenciometro_corrente_1_esta_zerado = potenciometros.get_potenciometro_em_zero_rotacao(pot_corrente1)
-	var potenciometro_corrente_2_esta_zerado = potenciometros.get_potenciometro_em_zero_rotacao(pot_corrente2)
+	var fontes_em_curto = hitboxes.get_fontes_em_curto()
 	
-	var fontes_com_curto = hitboxes.get_fontes_em_curto()
+	var fonte_1_em_curto = (fontes_em_curto.has(EnumsGlobal.FONTES.FONTE_1))
+	var fonte_2_em_curto = (fontes_em_curto.has(EnumsGlobal.FONTES.FONTE_2))
 	
-	var fonte1_em_curto = (fontes_com_curto.has(EnumsGlobal.FONTES.FONTE_1))
-	var fonte2_em_curto = (fontes_com_curto.has(EnumsGlobal.FONTES.FONTE_2))
+	var modo_serie_ativado = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.SERIES)
+	var modo_indep_ativado = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP)
 	
-	var modo_indep = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP)
-	var modo_serie = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.SERIES)
-	var modo_paralelo = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.PARALELL)
+	var corrente_1_zerada = potenciometros.get_potenciometro_em_zero(pot_corrente1)
 	
-	var valor_voltagem1 = 0
-	var valor_voltagem2 = 0
+	var voltagem_1 = 0
+	var voltagem_2 = 0
 	
-	var valor_corrente1 = 0
-	var valor_corrente2 = 0
+	var corrente_1 = 0
+	var corrente_2 = 0
 	
-	if fonte1_em_curto:
-		valor_corrente1 = pot_corrente1.saida
+	if fonte_1_em_curto:
+		corrente_1 = pot_corrente1.saida
 	else:
-		valor_voltagem1 = pot_voltagem1.saida
+		voltagem_1 = pot_voltagem1.saida
 		
-	if fonte2_em_curto:
-		valor_corrente2 = pot_corrente2.saida
+	if fonte_2_em_curto:
+		corrente_2 = pot_corrente2.saida
 	else:
-		valor_voltagem2 = pot_voltagem2.saida
+		voltagem_2 = pot_voltagem2.saida
 		
-	#if !modo_indep:
-	#	if potenciometro_corrente_2_esta_zerado:
-	#		valor_voltagem2 = 0
-	#	else:
-	#		valor_voltagem1 = valor_voltagem2
-	#		
-	#	if modo_serie and potenciometro_corrente_1_esta_zerado:
-	#		valor_voltagem1 = 0
-	#	else:
-	#		valor_voltagem1 = valor_voltagem2
-	
-	if !modo_indep:
-		valor_voltagem1 = valor_voltagem2
-			
-	if modo_serie and potenciometro_corrente_1_esta_zerado:
-		valor_voltagem1 = 0
+	if !modo_indep_ativado:
+		voltagem_1 = voltagem_2
 		
-	#if !modo_indep:
-	#	valor_voltagem1 = valor_voltagem2
-	#	if potenciometro_corrente_1_esta_zerado:
-	#		valor_voltagem1 = 0
+	if modo_serie_ativado and corrente_1_zerada:
+		voltagem_1 = 0
 		
-	#if potenciometros.get_fonte_zerada(EnumsGlobal.FONTES.FONTE_1):
-	#	valor_voltagem1 = 0
-	#	valor_corrente1 = 0
-		
-	#if potenciometros.get_fonte_zerada(EnumsGlobal.FONTES.FONTE_2):
-	#	valor_voltagem2 = 0
-	#	valor_corrente2 = 0
-	
-	display_voltagem1.text = "%05.2f" % valor_voltagem1
-	display_corrente1.text = "%05.2f" % valor_corrente1
-	
-	display_voltagem2.text = "%05.2f" % valor_voltagem2
-	display_corrente2.text = "%05.2f" % valor_corrente2
-	
+	escrever_displays(voltagem_1, corrente_1, voltagem_2, corrente_2)
+
 func _on_botao_on_off_toggled(toggled_on: bool) -> void:
 	tornar_texto_visivel(toggled_on)
 
+func escrever_displays(v_1, c_1, v_2, c_2) -> void:
+	display_voltagem1.text = "%05.2f" % v_1
+	display_corrente1.text = "%05.2f" % c_1
+
+	display_voltagem2.text = "%05.2f" % v_2
+	display_corrente2.text = "%05.2f" % c_2
+
 func tornar_texto_visivel(on) -> void:
-	var cor
-	if on:
-		cor = COR_ON
-	else:
-		cor = COR_OFF
+	var cor = COR_ON if on else COR_OFF
 	
 	if tween:
 		tween.kill()

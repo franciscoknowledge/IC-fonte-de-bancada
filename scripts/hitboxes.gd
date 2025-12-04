@@ -12,7 +12,6 @@ const LIMITE_FIOS = 2
 
 const CENA_FIO = preload("res://cenas/fio.tscn")
 
-#const TEXTURA_FIO_NORMAL = preload("res://imagens/fio_teste.png")
 const TEXTURA_FIO_SELECAO = preload("res://imagens/fio_branco.png")
 const TEXTURAS_FIOS = [
 	preload("res://imagens/fio_1.png"),
@@ -78,6 +77,7 @@ enum IDS_POPUP {
 	EnumsGlobal.SAIDAS.NEG_5V: $hitbox_saida8,
 }
 
+# nn sei pq isso tudo é export mas OK!
 @export var comuns_numeros_ativos = []
 @export var fontes_em_curto = []
 @export var fontes_com_comum = []
@@ -101,11 +101,7 @@ func _ready() -> void:
 	for membro: Node in hitboxes:
 		if membro is HitboxSaida:
 			membro.emitir_saida.connect(abrir_popup_para_saida)
-	
-	#for hitbox in hitboxes:
-	#	if !(hitbox is HitboxSaida): continue
-	#	hitbox.emitir_saida.connect(abrir_popup_para_saida)
-		
+
 func _process(_delta: float) -> void:
 	if get_possui_fontes_interconectadas():
 		quantidade_de_comuns = 1
@@ -174,14 +170,11 @@ func abrir_popup_para_saida(saida: int, hitbox: HitboxSaida) -> void:
 	
 	var fonte = EnumsGlobal.SAIDA_PARA_FONTE[saida]
 	var fonte_possui_comum = fonte in fontes_com_comum
-	#var fonte_possui_curto = fonte in fontes_em_curto
 	var e_fonte_5v = (fonte == EnumsGlobal.FONTES.FONTE_5V)
 	
 	var comum_presente
 	
 	var selecao_possui_comum = saida in comuns_numeros_ativos
-	#var selecao_possui_curto = saida in curtos_numeros_ativos
-	#var selecao_possui_fio = false
 	
 	var fio_resultante = []
 	var fio_e_igual = false
@@ -205,8 +198,6 @@ func abrir_popup_para_saida(saida: int, hitbox: HitboxSaida) -> void:
 	
 	var pode_definir_comum = (!fonte_possui_comum) and ((not e_fonte_5v) or seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP)
 	
-	#var pode_definir_comum = (!fonte_possui_comum) and (!fonte_possui_curto) and ((not e_fonte_5v) or seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP)
-	#var pode_definir_curto = (!fonte_possui_comum) and (!fonte_possui_curto)
 	var pode_definir_fios = (seletora.estado == EnumsGlobal.ESTADOS_FONTE.INDEP) and (fios_na_fonte.size() <= LIMITE_FIOS)
 	
 	if selecao_possui_comum:
@@ -344,7 +335,6 @@ func criar_fio() -> void:
 	var tween = create_tween()
 	var tamanho_desejado = fio_fisico.tamanho
 	
-	#var linha = LINHA_BASE.duplicate()
 	var altura = ALTURA_FIOS - (20 * (fios_na_fonte.size() - 1))
 	
 	var hitbox_1 = saida_para_hitbox[fio[0]]
@@ -406,7 +396,6 @@ func mudar_textura_dos_fios() -> void:
 	if fios_fisicos.is_empty(): return
 	
 	for fio_fisico: FioFisico in fios_fisicos:
-		#fio_fisico.texture = TEXTURA_FIO_NORMAL
 		fio_fisico.usar_textura_armazenada()
 
 func comparar_ordem_texturas(textura_a: Resource, textura_b: Resource) -> bool:

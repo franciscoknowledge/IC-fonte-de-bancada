@@ -63,7 +63,6 @@ func _ready() -> void:
 
 func _on_fonte_update() -> void:
 	calcular_potenciais()
-	#checar_fontes_em_zero()
 	colorir_labels()
 
 func _on_botao_on_off_toggled(toggled_on: bool) -> void:
@@ -75,7 +74,6 @@ func colorir_labels() -> void:
 	for label: Label in labels:
 		if !ciclo_detectado:
 			cor = label.get_meta("cor_inicial")
-		#label.remove_theme_color_override("font_outline_color")
 		label.add_theme_color_override("font_outline_color", cor)
 
 func toggle_visibilidade_labels(visivel) -> void:
@@ -215,11 +213,6 @@ func modo_serie_paralelo() -> void:
 	labels[5].visible = false
 	
 	escrever_labels([vb, vc, va, vd, 5, 0])
-	
-	#$d1.text = str(vb)
-	#$d3.text = str(vc)
-	#$d4.text = str(va)
-	#$d6.text = str(vd)
 
 func modo_indep() -> void:
 	var v1 = pot_voltagem1.saida
@@ -244,33 +237,10 @@ func modo_indep() -> void:
 			label.text = "!!!"
 		return
 	
-	#$d1.text = str(V_indep[PONTO_A])
-	#$d3.text = str(V_indep[PONTO_C])
-	#$d4.text = str(V_indep[PONTO_B])
-	#$d6.text = str(V_indep[PONTO_D])
-	
 	var va = V_indep[INDEP_PONTO_A]
 	var vc = V_indep[INDEP_PONTO_C]
 	var vb = V_indep[INDEP_PONTO_B]
 	var vd = V_indep[INDEP_PONTO_D]
-	
-	#@onready var d1: Label = $d1
-	#@onready var d3: Label = $d3
-	#@onready var d4: Label = $d4
-	#@onready var d6: Label = $d6
-	#
-	#@onready var d7: Label = $d7
-	#@onready var d8: Label = $d8
-	
-	#const INDEP_PONTO_A = EnumsGlobal.SAIDAS.POS_1
-	#const INDEP_PONTO_B = EnumsGlobal.SAIDAS.POS_2
-	#const INDEP_PONTO_C = EnumsGlobal.SAIDAS.NEG_1
-	#const INDEP_PONTO_D = EnumsGlobal.SAIDAS.NEG_2
-	
-	#ponto_a -> pos_1 -> d1
-	#ponto_b -> pos_2 -> d4
-	#ponto_c -> neg_1 -> d3
-	#ponto_d -> neg_2 -> d6
 	
 	var v_pos_5v = V_indep[INDEP_POS_5V]
 	var v_neg_5v = V_indep[INDEP_NEG_5V]

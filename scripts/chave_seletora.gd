@@ -18,10 +18,10 @@ var tween: Tween
 func _ready() -> void:
 	rotation = rotacoes[estado]
 
-func _pressed() -> void:	
+func _pressed() -> void:
 	var anterior = estado
-	estado = estado + 1
-	estado = wrapi(estado, 1, 4)
+	estado = estado + 1 as EnumsGlobal.ESTADOS_FONTE
+	estado = wrapi(estado, 1, 4) as EnumsGlobal.ESTADOS_FONTE
 	
 	estado_alterado.emit(estado, anterior)
 	tween_rotacao()
